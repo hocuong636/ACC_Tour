@@ -1,0 +1,72 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Thư viện ảnh";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Thư viện ảnh</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Thư viện ảnh</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Gallery Start -->
+<div class="container-fluid gallery py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Thư viện ảnh</h5>
+            <h1 class="mb-4">Khám phá những khoảnh khắc tuyệt vời</h1>
+        </div>
+        <div class="tab-class text-center">
+            <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
+                <li class="nav-item">
+                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
+                        <span class="text-dark" style="width: 150px;">Tất cả</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
+                        <span class="text-dark" style="width: 150px;">Miền Bắc</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
+                        <span class="text-dark" style="width: 150px;">Miền Trung</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
+                        <span class="text-dark" style="width: 150px;">Miền Nam</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div class="col-lg-4">
+                            <div class="gallery-item">
+                                <img class="img-fluid w-100" src="~/img/destination-1.jpg" alt="">
+                                <div class="gallery-content">
+                                    <h5 class="text-white text-uppercase mb-3">Hạ Long</h5>
+                                    <a href="~/img/destination-1.jpg" data-lightbox="gallery" class="btn btn-primary rounded-pill py-2 px-4 my-3">Xem ảnh</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thêm các ảnh khác tương tự -->
+                    </div>
+                </div>
+                <!-- Thêm các tab khác tương tự -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Gallery End -->

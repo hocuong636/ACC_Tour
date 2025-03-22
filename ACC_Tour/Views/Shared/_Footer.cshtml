@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-4">Về chúng tôi</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Đường ABC, Quận 1, TP.HCM</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+84 123 456 789</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@acctour.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-4">Liên kết nhanh</h4>
+                <a class="btn btn-link text-light" asp-controller="Home" asp-action="About">Về chúng tôi</a>
+                <a class="btn btn-link text-light" asp-controller="Tour" asp-action="Index">Tour du lịch</a>
+                <a class="btn btn-link text-light" asp-controller="Home" asp-action="Services">Dịch vụ</a>
+                <a class="btn btn-link text-light" asp-controller="Home" asp-action="Contact">Liên hệ</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-4">Tour phổ biến</h4>
+                <a class="btn btn-link text-light" href="">Tour Hà Nội - Sapa</a>
+                <a class="btn btn-link text-light" href="">Tour Đà Nẵng - Hội An</a>
+                <a class="btn btn-link text-light" href="">Tour Phú Quốc</a>
+                <a class="btn btn-link text-light" href="">Tour Nha Trang</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-4">Đăng ký nhận tin</h4>
+                <p>Đăng ký để nhận những thông tin mới nhất về tour du lịch</p>
+                <div class="position-relative mx-auto" style="max-width: 400px;">
+                    <form asp-controller="Home" asp-action="Subscribe" method="post">
+                        <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="email" placeholder="Email của bạn">
+                        <button type="submit" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Đăng ký</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; @DateTime.Now.Year <a class="border-bottom" href="#">ACC Tour</a>, All Rights Reserved. 
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="">Chính sách bảo mật</a>
+                        <a href="">Điều khoản sử dụng</a>
+                        <a href="">FAQ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->

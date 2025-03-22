@@ -1,0 +1,141 @@
+﻿@model IEnumerable<ACC_Tour.Models.Tour>
+
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<!-- Carousel Start -->
+<div class="carousel-header">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <img src="~/img/carousel-2.jpg" class="img-fluid" alt="Image">
+                <div class="carousel-caption">
+                    <div class="p-3" style="max-width: 900px;">
+                        <h4 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">Khám phá thế giới</h4>
+                        <h1 class="display-2 text-capitalize text-white mb-4">Cùng nhau khám phá thế giới!</h1>
+                        <p class="mb-5 fs-5">Hãy để chúng tôi dẫn dắt bạn đến những điểm đến tuyệt vời nhất trên thế giới.</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <a asp-controller="Tour" asp-action="Index" class="btn-hover-bg btn btn-primary rounded-pill text-white py-3 px-5">Khám phá ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Thêm các carousel items khác tương tự -->
+        </div>
+    </div>
+</div>
+<!-- Carousel End -->
+
+<!-- Search Bar Start -->
+<div class="container-fluid search-bar position-relative" style="top: -50%; transform: translateY(-50%);">
+    <div class="container">
+        <div class="position-relative rounded-pill w-100 mx-auto p-5" style="background: rgba(19, 53, 123, 0.8);">
+            <form asp-controller="Tour" asp-action="Index" method="get">
+                <input name="searchString" class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Tìm kiếm tour...">
+                <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 position-absolute me-2" style="top: 50%; right: 46px; transform: translateY(-50%);">Tìm kiếm</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Search Bar End -->
+
+<!-- About Start -->
+<div class="container-fluid about py-5">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <div class="h-100" style="border: 50px solid; border-color: transparent #13357B transparent #13357B;">
+                    <img src="~/img/about-img.jpg" class="img-fluid w-100 h-100" alt="">
+                </div>
+            </div>
+            <div class="col-lg-7" style="background: linear-gradient(rgba(255, 255, 255, .8), rgba(255, 255, 255, .8)), url(~/img/about-img-1.png);">
+                <h5 class="section-about-title pe-3">Về chúng tôi</h5>
+                <h1 class="mb-4">Chào mừng đến với <span class="text-primary">ACC Tour</span></h1>
+                <p class="mb-4">ACC Tour là đơn vị du lịch hàng đầu với hơn 10 năm kinh nghiệm trong lĩnh vực tổ chức tour du lịch trong và ngoài nước.</p>
+                <p class="mb-4">Chúng tôi tự hào mang đến cho quý khách những trải nghiệm du lịch tuyệt vời nhất với chất lượng dịch vụ cao cấp.</p>
+                <div class="row gy-2 gx-4 mb-4">
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Vé máy bay hạng nhất</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Khách sạn 5 sao</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Dịch vụ 24/7</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Hướng dẫn viên chuyên nghiệp</p>
+                    </div>
+                </div>
+                <a asp-controller="Home" asp-action="About" class="btn btn-primary rounded-pill py-3 px-5 mt-2">Tìm hiểu thêm</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+<!-- Services Start -->
+<div class="container-fluid bg-light service py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Dịch vụ</h5>
+            <h1 class="mb-0">Dịch vụ của chúng tôi</h1>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 pe-0">
+                            <div class="service-content text-end">
+                                <h5 class="mb-4">Tour trong nước</h5>
+                                <p class="mb-0">Khám phá vẻ đẹp của Việt Nam với các tour du lịch trong nước đa dạng, phong phú.</p>
+                            </div>
+                            <div class="service-icon p-4">
+                                <i class="fa fa-globe fa-4x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Thêm các service items khác -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Services End -->
+
+<!-- Tour Packages Start -->
+<div class="container-fluid tour py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Tour du lịch</h5>
+            <h1 class="mb-0">Tour nổi bật</h1>
+        </div>
+        <div class="row g-4">
+            @foreach (var tour in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="tour-item">
+                        <div class="tour-img">
+                            <img src="@tour.ImageUrl" class="img-fluid w-100" alt="">
+                        </div>
+                        <div class="tour-content">
+                            <h5 class="mb-3">@tour.Name</h5>
+                            <p class="mb-3">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-primary">@tour.Price.ToString("N0") VNĐ</span>
+                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-primary rounded-pill py-2 px-4">Chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Tour Packages End -->

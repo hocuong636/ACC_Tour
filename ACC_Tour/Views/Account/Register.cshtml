@@ -1,0 +1,109 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ACC_Tour.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Đăng ký tài khoản</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Đăng ký</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Register Start -->
+<div class="container-fluid booking py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="bg-light rounded p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <h1 class="mb-3">Đăng ký tài khoản</h1>
+                        <p class="mb-0">Vui lòng điền đầy đủ thông tin bên dưới để tạo tài khoản</p>
+                    </div>
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="FirstName" type="text" class="form-control" id="FirstName" placeholder="Nhập họ">
+                                    <label asp-for="FirstName">Họ</label>
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="LastName" type="text" class="form-control" id="LastName" placeholder="Nhập tên">
+                                    <label asp-for="LastName">Tên</label>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="Nhập email">
+                                    <label asp-for="Email">Email</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Nhập mật khẩu">
+                                    <label asp-for="Password">Mật khẩu</label>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control" id="ConfirmPassword" placeholder="Xác nhận mật khẩu">
+                                    <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="DateOfBirth" type="date" class="form-control" id="DateOfBirth">
+                                    <label asp-for="DateOfBirth">Ngày sinh</label>
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea asp-for="Address" class="form-control" placeholder="Nhập địa chỉ" id="Address" style="height: 100px"></textarea>
+                                    <label asp-for="Address">Địa chỉ</label>
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Đăng ký</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p>Đã có tài khoản? <a asp-controller="Account" asp-action="Login">Đăng nhập ngay</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Register End -->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Custom validation script nếu cần
+        $(document).ready(function () {
+            // Thêm validation rules tùy chỉnh nếu cần
+        });
+    </script>
+}

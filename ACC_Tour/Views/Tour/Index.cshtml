@@ -1,0 +1,64 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<ACC_Tour.Models.Tour>
+@{
+    ViewData["Title"] = "Danh sách Tour";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Tour du lịch</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Tour du lịch</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Package Start -->
+<div class="container-fluid tour py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Tour du lịch</h5>
+            <h1 class="mb-0">Các tour du lịch hấp dẫn</h1>
+        </div>
+        <div class="row g-4">
+            @foreach (var tour in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="package-item">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="@tour.ImageUrl" alt="">
+                        </div>
+                        <div class="d-flex border-bottom">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@tour.StartDate.ToString("dd/MM/yyyy")</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>@((tour.EndDate - tour.StartDate).Days) ngày</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>@tour.MaxParticipants người</small>
+                        </div>
+                        <div class="text-center p-4">
+                            <h3 class="mb-0">@tour.Price.ToString("N0") VNĐ</h3>
+                            <div class="mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div>
+                            <p>@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+                            <div class="d-flex justify-content-center mb-2">
+                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Chi tiết</a>
+                                <a asp-controller="Booking" asp-action="Create" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Package End -->

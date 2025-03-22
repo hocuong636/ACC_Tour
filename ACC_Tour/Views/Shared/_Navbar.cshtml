@@ -1,0 +1,26 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container-fluid position-relative p-0">
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+        <a asp-controller="Home" asp-action="Index" class="navbar-brand p-0">
+            <h1 class="m-0"><i class="fa fa-map-marker-alt me-3"></i>ACC Tour</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Trang chủ</a>
+                <a asp-controller="Home" asp-action="About" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Giới thiệu</a>
+                <a asp-controller="Tour" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Tour" ? "active" : "")">Tours</a>
+                <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
+                <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
+            </div>
+            <a asp-controller="Booking" asp-action="Create" class="btn btn-primary rounded-pill py-2 px-4 ms-lg-4">Đặt Tour</a>
+        </div>
+    </nav>
+</div>
