@@ -6,15 +6,32 @@
     ViewData["Title"] = "Liên hệ";
 }
 
-<partial name="_PageHeader" />
+<div class="carousel-header">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <img src="~/img/carousel-2.jpg" class="img-fluid" alt="Image">
+                <div class="carousel-caption">
+                    <div class="p-3" style="max-width: 900px;">
+                        <div class="text-center mb-5">
+                            <h1 class="display-2 text-capitalize text-white mb-4">Liên hệ với chúng tôi</h1>
+                            <p class="mb-0">Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Contact Start -->
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <div class="text-center mb-5">
-            <h1 class="mb-3">Liên hệ với chúng tôi</h1>
-            <p class="mb-0">Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào</p>
-        </div>
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="bg-light rounded p-4">

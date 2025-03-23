@@ -34,12 +34,26 @@ namespace ACC_Tour.Controllers
         {
             return View();
         }
-
+        public IActionResult Services()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
         }
-
+        public IActionResult Destination()
+        {
+            return View();
+        }
+        public IActionResult Gallery()
+        {
+            return View();
+        }
+        public IActionResult Testimonial()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

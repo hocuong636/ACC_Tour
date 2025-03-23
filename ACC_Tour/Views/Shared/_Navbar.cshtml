@@ -17,6 +17,7 @@
                 <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Trang chủ</a>
                 <a asp-controller="Home" asp-action="About" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Giới thiệu</a>
                 <a asp-controller="Tour" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Tour" ? "active" : "")">Tours</a>
+                <a asp-controller="Home" asp-action="Destination" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Điểm đến</a>
                 <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
                 <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
             </div>

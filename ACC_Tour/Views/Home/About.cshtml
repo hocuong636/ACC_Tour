@@ -5,53 +5,58 @@
     ViewData["Title"] = "Về chúng tôi";
 }
 
-<partial name="_PageHeader" />
-
 <!-- About Start -->
-<div class="container-fluid py-5">
-    <div class="container py-5">
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-6">
-                <div class="about-img">
-                    <img src="~/img/about.jpg" class="img-fluid rounded" alt="About Image">
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="about-content">
-                    <h1 class="mb-4">Chào mừng đến với ACC Tour</h1>
-                    <p class="mb-4">ACC Tour là đơn vị du lịch hàng đầu với hơn 10 năm kinh nghiệm trong lĩnh vực tổ chức tour du lịch trong và ngoài nước. Chúng tôi tự hào mang đến cho quý khách những trải nghiệm du lịch tuyệt vời với chất lượng dịch vụ cao cấp.</p>
-                    <div class="row g-4 mb-4">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-check text-primary me-2"></i>
-                                <span>Đội ngũ hướng dẫn viên chuyên nghiệp</span>
+<div class="carousel-header">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <img src="~/img/carousel-2.jpg" class="img-fluid" alt="Image">
+                <div class="carousel-caption">
+                    <div class="p-3" style="max-width: 900px;">
+                        <div class="about-content">
+                            <h1 class="display-2 text-capitalize text-white mb-4">Chào mừng đến với ACC Tour</h1>
+                            <p class="mb-4">ACC Tour là đơn vị du lịch hàng đầu với hơn 10 năm kinh nghiệm trong lĩnh vực tổ chức tour du lịch trong và ngoài nước. Chúng tôi tự hào mang đến cho quý khách những trải nghiệm du lịch tuyệt vời với chất lượng dịch vụ cao cấp.</p>
+                            <div class="row g-4 mb-4">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-check text-primary me-2"></i>
+                                        <span>Đội ngũ hướng dẫn viên chuyên nghiệp</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-check text-primary me-2"></i>
+                                        <span>Dịch vụ chất lượng cao</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-check text-primary me-2"></i>
+                                        <span>Giá cả hợp lý</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-check text-primary me-2"></i>
+                                        <span>An toàn tuyệt đối</span>
+                                    </div>
+                                </div>
                             </div>
+                            <a href="" class="btn btn-primary py-3 px-5">Tìm hiểu thêm</a>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-check text-primary me-2"></i>
-                                <span>Dịch vụ chất lượng cao</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-check text-primary me-2"></i>
-                                <span>Giá cả hợp lý</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-check text-primary me-2"></i>
-                                <span>An toàn tuyệt đối</span>
-                            </div>
-                        </div>
+
                     </div>
-                    <a href="" class="btn btn-primary py-3 px-5">Tìm hiểu thêm</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- About End -->
 
 <!-- Feature Start -->
