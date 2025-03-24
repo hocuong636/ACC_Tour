@@ -1,0 +1,170 @@
+@model ACC_Tour.Models.Booking
+
+@{
+    ViewData["Title"] = "Chi tiết đặt tour";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Chi tiết đặt tour #@Model.Id</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Admin/Booking">Quản lý Đặt Tour</a></li>
+                    <li class="breadcrumb-item active">Chi tiết đặt tour</li>
+                </ol>
+            </nav>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Thông tin đặt tour -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary">Thông tin đặt tour</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Mã đặt tour</dt>
+                                <dd class="col-sm-8">#@Model.Id</dd>
+
+                                <dt class="col-sm-4">Ngày đặt</dt>
+                                <dd class="col-sm-8">@Model.BookingDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                                <dt class="col-sm-4">Số người</dt>
+                                <dd class="col-sm-8">@Model.NumberOfParticipants</dd>
+
+                                <dt class="col-sm-4">Tổng tiền</dt>
+                                <dd class="col-sm-8">@Model.TotalAmount.ToString("N0") đ</dd>
+
+                                <dt class="col-sm-4">Phương thức</dt>
+                                <dd class="col-sm-8">@Model.PaymentMethod</dd>
+
+                                <dt class="col-sm-4">Trạng thái</dt>
+                                <dd class="col-sm-8">
+                                    @switch (Model.Status)
+                                    {
+                                        case BookingStatus.Pending:
+                                            <span class="badge bg-warning">Chờ xác nhận</span>
+                                            break;
+                                        case BookingStatus.Confirmed:
+                                            <span class="badge bg-success">Đã xác nhận</span>
+                                            break;
+                                        case BookingStatus.Cancelled:
+                                            <span class="badge bg-danger">Đã hủy</span>
+                                            break;
+                                        case BookingStatus.Completed:
+                                            <span class="badge bg-info">Hoàn thành</span>
+                                            break;
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">Thanh toán</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-@(Model.PaymentStatus == "Paid" ? "success" : "warning")">
+                                        @(Model.PaymentStatus == "Paid" ? "Đã thanh toán" : "Chưa thanh toán")
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin tour -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary">Thông tin tour</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        @if (!string.IsNullOrEmpty(Model.Tour.ImageUrl))
+                        {
+                            <img src="@Model.Tour.ImageUrl" alt="@Model.Tour.Name" class="rounded me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        }
+                        <div>
+                            <h5 class="mb-1">@Model.Tour.Name</h5>
+                            <p class="text-muted mb-0">@Model.Tour.Description</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Ngày bắt đầu</dt>
+                                <dd class="col-sm-8">@Model.Tour.StartDate.ToString("dd/MM/yyyy")</dd>
+
+                                <dt class="col-sm-4">Ngày kết thúc</dt>
+                                <dd class="col-sm-8">@Model.Tour.EndDate.ToString("dd/MM/yyyy")</dd>
+
+                                <dt class="col-sm-4">Giá</dt>
+                                <dd class="col-sm-8">@Model.Tour.Price.ToString("N0") đ</dd>
+
+                                <dt class="col-sm-4">Số người tối đa</dt>
+                                <dd class="col-sm-8">@Model.Tour.MaxParticipants</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin khách hàng -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary">Thông tin khách hàng</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-circle fa-3x text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1">@Model.User.UserName</h5>
+                            <p class="text-muted mb-0">@Model.User.Email</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cập nhật trạng thái -->
+            @if (Model.Status == BookingStatus.Pending)
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 fw-bold text-primary">Cập nhật trạng thái</h6>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="d-grid gap-2">
+                                <input type="hidden" name="newStatus" value="@BookingStatus.Confirmed" />
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check me-2"></i>Xác nhận đặt tour
+                                </button>
+                            </div>
+                        </form>
+                        <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" class="mt-2">
+                            @Html.AntiForgeryToken()
+                            <div class="d-grid">
+                                <input type="hidden" name="newStatus" value="@BookingStatus.Cancelled" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-times me-2"></i>Hủy đặt tour
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div> 

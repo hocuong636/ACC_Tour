@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ACC_Tour.Models;
 using ACC_Tour.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace ACC_Tour.Controllers
 {
@@ -67,17 +69,18 @@ namespace ACC_Tour.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, false);
-
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var user = await _signInManager.UserManager.FindByEmailAsync(model.Email);
+                    if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
                     return RedirectToAction("Index", "Home");
                 }
-
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
-
             return View(model);
         }
 
