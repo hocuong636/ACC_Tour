@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Data;
 using ACC_Tour.Models;
-using ACC_Tour.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
