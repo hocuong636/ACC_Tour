@@ -1,8 +1,10 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+@using Microsoft.AspNetCore.Identity
+@using ACC_Tour.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <div class="container-fluid position-relative p-0">
     <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
@@ -20,8 +22,43 @@
                 <a asp-controller="Home" asp-action="Destination" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Điểm đến</a>
                 <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
                 <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="/Admin/Home" class="nav-item nav-link">Quản trị</a>
+                    }
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">@User.Identity.Name</a>
+                        <div class="dropdown-menu m-0">
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                <button type="submit" class="dropdown-item">Đăng xuất</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="nav-item nav-link">Đăng nhập</a>
+                    <a href="/Account/Register" class="nav-item nav-link">Đăng ký</a>
+                }
             </div>
             <a asp-controller="Booking" asp-action="Create" class="btn btn-primary rounded-pill py-2 px-4 ms-lg-4">Đặt Tour</a>
         </div>
     </nav>
+
+    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+        <div class="container py-5">
+            <div class="row justify-content-center py-5">
+                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Enjoy Your Vacation With Us</h1>
+                    <p class="fs-4 text-white mb-4 animated slideInDown">Tempor erat elitr rebum at clita diam amet diam et eos erat ipsum lorem sit</p>
+                    <div class="position-relative w-75 mx-auto animated slideInDown">
+                        <input class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Eg: Thailand">
+                        <button type="button" class="btn btn-primary rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style="margin-top: 7px;">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
