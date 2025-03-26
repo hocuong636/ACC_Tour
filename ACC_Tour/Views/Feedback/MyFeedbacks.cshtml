@@ -1,0 +1,155 @@
+@model IEnumerable<ACC_Tour.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Phản hồi của tôi";
+}
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Đánh giá</h6>
+            <h1 class="mb-5">Phản hồi của tôi</h1>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="text-end mb-4">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Viết đánh giá mới
+                    </a>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-comments text-muted fa-4x mb-3"></i>
+                        <h5 class="text-muted">Bạn chưa có đánh giá nào</h5>
+                        <p class="text-muted">Hãy chia sẻ trải nghiệm của bạn về các tour du lịch</p>
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="card shadow-sm mb-4 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0">@item.Title</h5>
+                                    <div>
+                                        @if (item.IsApproved)
+                                        {
+                                            <span class="badge bg-success">Đã duyệt</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Chờ duyệt</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (item.Tour != null)
+                                {
+                                    <div class="mb-3 text-primary">
+                                        <i class="fas fa-map-marker-alt me-2"></i>@item.Tour.Name
+                                    </div>
+                                }
+
+                                <p class="card-text text-muted">@item.Content</p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="rating">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= item.Rating)
+                                            {
+                                                <i class="fas fa-star text-warning"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star text-warning"></i>
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <small class="text-muted me-3">
+                                            <i class="far fa-clock me-1"></i>
+                                            @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+
+                                        <div class="btn-group">
+                                            @if (!item.IsApproved)
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.Id" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            }
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" 
+                                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .rating {
+        font-size: 1.1rem;
+    }
+
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
+    }
+
+    .section-title::before {
+        position: absolute;
+        content: "";
+        width: 45px;
+        height: 2px;
+        top: 50%;
+        left: -55px;
+        margin-top: -1px;
+        background: var(--primary);
+    }
+
+    .section-title::after {
+        position: absolute;
+        content: "";
+        width: 45px;
+        height: 2px;
+        top: 50%;
+        right: -55px;
+        margin-top: -1px;
+        background: var(--primary);
+    }
+
+    .badge {
+        padding: 0.5em 0.75em;
+    }
+</style> 
