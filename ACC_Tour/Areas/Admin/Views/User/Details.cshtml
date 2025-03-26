@@ -1,0 +1,70 @@
+@model ACC_Tour.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết người dùng";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Chi tiết người dùng</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/Admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "User", new { area = "Admin" })">Quản lý người dùng</a></li>
+        <li class="breadcrumb-item active">Chi tiết</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user me-1"></i>
+            Thông tin chi tiết
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FullName)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FullName)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EmailConfirmed)</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.EmailConfirmed)
+                            {
+                                <span class="badge bg-success">Đã xác thực</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">Chưa xác thực</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Roles)</dt>
+                        <dd class="col-sm-8">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <span class="badge bg-primary me-1">@role</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div> 
