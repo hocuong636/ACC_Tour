@@ -1,0 +1,204 @@
+﻿@model ACC_Tour.ViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = "Báo cáo doanh thu";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Báo cáo doanh thu</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Báo cáo doanh thu</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Thống kê tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Doanh thu tháng</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MonthlyRevenue.ToString("N0") đ</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Tổng số tour</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalTours</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-mountain fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Tổng khách hàng</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCustomers</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Đơn hàng mới hôm nay</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.NewOrders</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ doanh thu -->
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="monthlyRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Thống kê theo khoảng thời gian</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="startDate">Từ ngày:</label>
+                        <input type="date" class="form-control" id="startDate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">Đến ngày:</label>
+                        <input type="date" class="form-control" id="endDate" />
+                    </div>
+                    <button class="btn btn-primary" onclick="getRevenueByDateRange()">
+                        Xem thống kê
+                    </button>
+                    <div class="mt-4">
+                        <div id="revenueTable"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Biểu đồ doanh thu theo tháng
+        var monthlyRevenueData = @Html.Raw(Json.Serialize(Model.MonthlyRevenueData));
+        var monthlyRevenueChart = new Chart(document.getElementById('monthlyRevenueChart'), {
+            type: 'line',
+            data: {
+                labels: monthlyRevenueData.Labels,
+                datasets: [{
+                    label: 'Doanh thu (đ)',
+                    data: monthlyRevenueData.Data,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Hàm lấy dữ liệu theo khoảng thời gian
+        function getRevenueByDateRange() {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+
+            if (!startDate || !endDate) {
+                alert('Vui lòng chọn khoảng thời gian');
+                return;
+            }
+
+            $.get('/Admin/Report/GetRevenueByDateRange', { startDate: startDate, endDate: endDate })
+                .done(function(data) {
+                    var table = '<table class="table table-bordered">' +
+                        '<thead><tr>' +
+                        '<th>Ngày</th>' +
+                        '<th>Tour</th>' +
+                        '<th>Số khách</th>' +
+                        '<th>Doanh thu</th>' +
+                        '<th>Trạng thái</th>' +
+                        '</tr></thead><tbody>';
+
+                    data.forEach(function(item) {
+                        table += '<tr>' +
+                            '<td>' + item.time + '</td>' +
+                            '<td>' + item.tourName + '</td>' +
+                            '<td>' + item.numberOfCustomers + '</td>' +
+                            '<td>' + item.revenue.toLocaleString('vi-VN') + ' đ</td>' +
+                            '<td>' + item.status + '</td>' +
+                            '</tr>';
+                    });
+
+                    table += '</tbody></table>';
+                    $('#revenueTable').html(table);
+                })
+                .fail(function(error) {
+                    alert('Có lỗi xảy ra khi lấy dữ liệu');
+                });
+        }
+    </script>
+}
+

@@ -22,7 +22,7 @@
                 <a asp-controller="Home" asp-action="Destination" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Điểm đến</a>
                 <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
                 <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
-                @if (SignInManager.IsSignedIn(User))
+@*                 @if (SignInManager.IsSignedIn(User))
                 {
                     @if (User.IsInRole("Admin"))
                     {
@@ -42,7 +42,7 @@
                     <a href="/Account/Login" class="nav-item nav-link">Đăng nhập</a>
                     <a href="/Account/Register" class="nav-item nav-link">Đăng ký</a>
                 }
-            </div>
+            </div> *@
             <a asp-controller="Booking" asp-action="Create" class="btn btn-primary rounded-pill py-2 px-4 ms-lg-4">Đặt Tour</a>
         </div>
     </nav>

@@ -1,57 +1,58 @@
 ﻿@model ACC_Tour.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Đăng nhập";
+    Layout = "_AuthLayout";
 }
 
-<!-- Page Header Start -->
-<div class="container-fluid page-header mb-5 py-5">
-    <div class="container">
-        <h1 class="display-3 text-white mb-3 animated slideInDown">Đăng nhập</h1>
-        <nav aria-label="breadcrumb animated slideInDown">
-            <ol class="breadcrumb text-uppercase">
-                <li class="breadcrumb-item"><a class="text-black" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                <li class="breadcrumb-item text-black active" aria-current="page">Đăng nhập</li>
-            </ol>
-        </nav>
-    </div>
-</div>
-<!-- Page Header End -->
-
-<!-- Login Start -->
-<div class="container-fluid booking py-5">
-    <div class="container py-5">
-        <div class="row g-5">
-            <div class="col-lg-6 mx-auto">
-                <div class="bg-light p-4 p-md-5">
-                    <h4 class="mb-4">Đăng nhập tài khoản</h4>
-                    <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Mật khẩu</label>
-                            <input asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3 form-check">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
-                    </form>
-                    <div class="mt-3 text-center">
-                        <p>Chưa có tài khoản? <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Đăng ký ngay</a></p>
-                    </div>
+<div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+    <div class="auth-box">
+        <div class="auth-header">
+            <img src="~/img/logo.png" alt="ACC Tour" class="logo" />
+            <h3 class="mb-0">Đăng nhập</h3>
+        </div>
+        <div class="auth-body">
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3"></div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                    <label asp-for="Email">
+                        <i class="bi bi-envelope"></i>
+                        Email
+                    </label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" class="form-control" placeholder="Mật khẩu" />
+                    <label asp-for="Password">
+                        <i class="bi bi-lock"></i>
+                        Mật khẩu
+                    </label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="auth-footer">
+            <div class="small">
+                Chưa có tài khoản? <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" class="text-primary">Đăng ký ngay</a>
             </div>
         </div>
     </div>
 </div>
-<!-- Login End -->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

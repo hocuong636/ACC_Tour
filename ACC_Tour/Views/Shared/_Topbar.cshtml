@@ -1,4 +1,9 @@
-﻿@*
+﻿@using Microsoft.AspNetCore.Identity
+@using ACC_Tour.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -30,9 +35,11 @@
                             <a asp-controller="Booking" asp-action="History" class="dropdown-item">
                                 <i class="fas fa-history me-2"></i>Lịch sử đặt tour
                             </a>
-                            <a asp-controller="Account" asp-action="Logout" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                            </a>
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                </button>
+                            </form>
                         </div>
                     </div>
                 }
@@ -49,3 +56,25 @@
         </div>
     </div>
 </div>
+
+<style>
+    .dropdown-menu {
+        margin-top: 0.5rem;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--bs-primary);
+        color: white;
+    }
+
+    .dropdown-item i {
+        width: 1.2rem;
+        text-align: center;
+    }
+</style>

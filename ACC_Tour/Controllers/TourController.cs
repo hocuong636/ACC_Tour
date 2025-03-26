@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ACC_Tour.Models;
 using Microsoft.EntityFrameworkCore;
-using Data;
+using ACC_Tour.Data;
 
 namespace ACC_Tour.Controllers
 {

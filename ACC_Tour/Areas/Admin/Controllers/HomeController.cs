@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Data;
-using ACC_Tour.Models;
+using ACC_Tour.Data;
 
 namespace ACC_Tour.Areas.Admin.Controllers
 {

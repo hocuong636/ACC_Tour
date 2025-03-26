@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Data;
+using ACC_Tour.Data;
 using ACC_Tour.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,10 +14,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
 })
-.AddEntityFrameworkStores<Data.ApplicationDbContext>()
+.AddEntityFrameworkStores<ACC_Tour.Data.ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<Data.ApplicationDbContext>(options =>
+builder.Services.AddDbContext<ACC_Tour.Data.ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Authentication
