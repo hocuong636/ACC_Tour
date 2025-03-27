@@ -67,6 +67,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     StartDate = viewModel.StartDate,
                     EndDate = viewModel.EndDate,
                     MaxParticipants = viewModel.MaxParticipants,
+                    MinParticipants = viewModel.MinParticipants,
                     Description = viewModel.Description,
                     IsActive = true
                 };
@@ -120,6 +121,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 StartDate = tour.StartDate,
                 EndDate = tour.EndDate,
                 MaxParticipants = tour.MaxParticipants,
+                MinParticipants = tour.MinParticipants,
                 Description = tour.Description,
                 ImageUrl = tour.ImageUrl,
                 IsActive = tour.IsActive
@@ -153,6 +155,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     tour.StartDate = viewModel.StartDate;
                     tour.EndDate = viewModel.EndDate;
                     tour.MaxParticipants = viewModel.MaxParticipants;
+                    tour.MinParticipants = viewModel.MinParticipants;
                     tour.Description = viewModel.Description;
                     tour.IsActive = viewModel.IsActive;
 

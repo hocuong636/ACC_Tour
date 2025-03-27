@@ -66,6 +66,12 @@
                         </div>
 
                         <div class="mb-3">
+                            <label asp-for="MinParticipants" class="form-label">Số người tối thiểu</label>
+                            <input asp-for="MinParticipants" class="form-control" type="number" min="1" />
+                            <span asp-validation-for="MinParticipants" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
                             <label asp-for="ImageFile" class="form-label">Hình ảnh</label>
                             <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
@@ -109,8 +115,8 @@
                 
                 // Validate price range
                 var price = parseInt(rawValue);
-                if (price < 1000 || price > 1000000000) {
-                    alert('Giá tour phải từ 1,000 đến 1,000,000,000 VNĐ');
+                if (price <= 0 || price < 1000 || price > 1000000000) {
+                    alert('Giá tour phải lớn hơn 0 và từ 1,000 đến 1,000,000,000 VNĐ');
                     return false;
                 }
                 return true;
@@ -130,6 +136,17 @@
                 if (endDate <= startDate) {
                     alert('Ngày kết thúc phải sau ngày bắt đầu');
                     $('#EndDate').val('');
+                }
+            });
+
+            // Validate MinParticipants is not greater than MaxParticipants
+            $('#MaxParticipants, #MinParticipants').change(function () {
+                var maxParticipants = parseInt($('#MaxParticipants').val());
+                var minParticipants = parseInt($('#MinParticipants').val());
+                
+                if (minParticipants > maxParticipants) {
+                    alert('Số người tối thiểu không được lớn hơn số người tối đa');
+                    $('#MinParticipants').val('');
                 }
             });
         });

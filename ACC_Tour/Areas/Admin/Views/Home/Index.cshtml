@@ -100,9 +100,7 @@
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
                             <th>Giá</th>
-                            <th>Số người tối đa</th>
                             <th>Trạng thái</th>
-                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -124,21 +122,8 @@
                                 <td>@tour.StartDate.ToString("dd/MM/yyyy")</td>
                                 <td>@tour.EndDate.ToString("dd/MM/yyyy")</td>
                                 <td>@tour.Price.ToString("N0") đ</td>
-                                <td>@tour.MaxParticipants</td>
                                 <td>
                                     <span class="badge bg-success">Đang hoạt động</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                        <a asp-area="Admin" asp-controller="Tour" asp-action="Edit" asp-route-id="@tour.Id" 
-                                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a asp-area="Admin" asp-controller="Tour" asp-action="Delete" asp-route-id="@tour.Id" 
-                                           class="btn btn-danger btn-sm" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
                                 </td>
                             </tr>
                         }

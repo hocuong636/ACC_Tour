@@ -27,12 +27,18 @@ namespace ACC_Tour.ViewModels
         [Required(ErrorMessage = "Vui lòng chọn ngày kết thúc")]
         [Display(Name = "Ngày kết thúc")]
         [DataType(DataType.Date)]
+        [CustomValidation(typeof(TourViewModel), "ValidateEndDate")]
         public DateTime EndDate { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập số người tối đa")]
         [Display(Name = "Số người tối đa")]
         [Range(1, int.MaxValue, ErrorMessage = "Số người phải lớn hơn 0")]
         public int MaxParticipants { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập số người tối thiểu")]
+        [Display(Name = "Số người tối thiểu")]
+        [Range(1, int.MaxValue, ErrorMessage = "Số người tối thiểu phải lớn hơn 0")]
+        public int MinParticipants { get; set; }
 
         [Display(Name = "Hình ảnh hiện tại")]
         public string? ImageUrl { get; set; }
@@ -47,5 +53,15 @@ namespace ACC_Tour.ViewModels
         public string Description { get; set; }
 
         public bool IsActive { get; set; }
+
+        public static ValidationResult ValidateEndDate(DateTime endDate, ValidationContext context)
+        {
+            var tourViewModel = (TourViewModel)context.ObjectInstance;
+            if (endDate <= tourViewModel.StartDate)
+            {
+                return new ValidationResult("Ngày kết thúc phải sau ngày bắt đầu");
+            }
+            return ValidationResult.Success;
+        }
     }
 }

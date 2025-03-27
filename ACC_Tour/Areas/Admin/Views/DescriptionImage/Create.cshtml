@@ -1,0 +1,54 @@
+﻿@model ACC_Tour.Models.DescriptionImage
+
+@{
+    ViewData["Title"] = "Thêm hình ảnh mô tả mới";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Thêm hình ảnh mô tả mới</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Admin/DescriptionImage">Quản lý hình ảnh mô tả</a></li>
+                    <li class="breadcrumb-item active">Thêm hình ảnh mô tả mới</li>
+                </ol>
+            </nav>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageFile" class="form-label">Hình ảnh</label>
+                    <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TourId" class="form-label">ID Tour</label>
+                    <input asp-for="TourId" class="form-control" />
+                    <span asp-validation-for="TourId" class="text-danger"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

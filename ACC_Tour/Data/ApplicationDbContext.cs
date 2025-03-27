@@ -72,6 +72,12 @@ namespace ACC_Tour.Data
                 .HasMany(b => b.Categories)
                 .WithMany(c => c.Blogs);
 
+            builder.Entity<Tour>()
+                .HasMany(t => t.DescriptionImages)
+                .WithOne(di => di.Tour)
+                .HasForeignKey(di => di.TourId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
         }
     }

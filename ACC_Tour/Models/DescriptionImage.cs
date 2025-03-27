@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace ACC_Tour.Models
 {
@@ -6,11 +7,12 @@ namespace ACC_Tour.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập URL hình ảnh")]
-        [Display(Name = "URL hình ảnh")]
-        public string Url { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn hình ảnh.")]
+        public string? ImageFile { get; set; }
 
-        public int TourId { get; set; } // Khóa ngoại để liên kết với Tour
+        [Required(ErrorMessage = "Vui lòng nhập ID Tour.")]
+        public int TourId { get; set; }
+
         public virtual Tour Tour { get; set; } // Mối quan hệ với Tour
     }
 } 

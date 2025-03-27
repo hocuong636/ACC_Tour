@@ -43,10 +43,15 @@
 
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EndDate)</dt>
                         <dd class="col-sm-8">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
+
                     </dl>
                 </div>
                 <div class="col-md-6">
                     <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.MinParticipants)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.MinParticipants)</dd>
+
+
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.MaxParticipants)</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.MaxParticipants)</dd>
 

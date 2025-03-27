@@ -32,8 +32,8 @@
                 <div class="mb-3">
                     <label asp-for="Price" class="form-label">Giá</label>
                     <div class="input-group">
-                        <input type="text" id="PriceDisplay" class="form-control" value="@Model.Price.ToString("N0")" />
-                        <input type="hidden" asp-for="Price" id="PriceValue" />
+                        <input type="text"  class="form-control" value="@Model.Price.ToString("N0")" />
+                        <input type="hidden" asp-for="Price" value="@Model.Price" />
                         <span class="input-group-text">VNĐ</span>
                     </div>
                     <span asp-validation-for="Price" class="text-danger"></span>
@@ -49,6 +49,12 @@
                     <label asp-for="EndDate" class="form-label">Ngày kết thúc</label>
                     <input asp-for="EndDate" class="form-control" type="date" />
                     <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MinParticipants" class="form-label">Số người tối thiểu</label>
+                    <input asp-for="MinParticipants" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="MinParticipants" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">

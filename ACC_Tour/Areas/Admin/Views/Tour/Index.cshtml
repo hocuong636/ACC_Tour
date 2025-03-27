@@ -31,6 +31,7 @@
                             <th>@Html.DisplayNameFor(model => model.Price)</th>
                             <th>@Html.DisplayNameFor(model => model.StartDate)</th>
                             <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.MinParticipants)</th>
                             <th>@Html.DisplayNameFor(model => model.MaxParticipants)</th>
                             <th class="text-center">Thao tác</th>
                         </tr>
@@ -54,6 +55,7 @@
                                 <td>@item.Price.ToString("N0") VNĐ</td>
                                 <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
                                 <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                <td>@Html.DisplayFor(modelItem => item.MinParticipants)</td>
                                 <td>@Html.DisplayFor(modelItem => item.MaxParticipants)</td>
                                 <td class="text-center">
                                     <div class="btn-group">
