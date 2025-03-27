@@ -16,49 +16,63 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Trang chủ</a>
-                <a asp-controller="Home" asp-action="About" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Giới thiệu</a>
+                <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Trang chủ</a>
+                <a asp-controller="Home" asp-action="About" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Giới thiệu</a>
                 <a asp-controller="Tour" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Tour" ? "active" : "")">Tours</a>
-                <a asp-controller="Home" asp-action="Destination" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Điểm đến</a>
-                <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
-                <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
-@*                 @if (SignInManager.IsSignedIn(User))
-                {
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a href="/Admin/Home" class="nav-item nav-link">Quản trị</a>
-                    }
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">@User.Identity.Name</a>
-                        <div class="dropdown-menu m-0">
-                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                                <button type="submit" class="dropdown-item">Đăng xuất</button>
-                            </form>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <a href="/Account/Login" class="nav-item nav-link">Đăng nhập</a>
-                    <a href="/Account/Register" class="nav-item nav-link">Đăng ký</a>
-                }
-            </div> *@
-            <a asp-controller="Booking" asp-action="Create" class="btn btn-primary rounded-pill py-2 px-4 ms-lg-4">Đặt Tour</a>
-        </div>
-    </nav>
+                <a asp-controller="Home" asp-action="Destination" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Destination" ? "active" : "")">Điểm đến</a>
+                <a asp-controller="Home" asp-action="Services" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Services" ? "active" : "")">Dịch vụ</a>
+                <a asp-controller="Home" asp-action="Blog" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Blog" ? "active" : "")">Blogs</a>
+                <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">Liên hệ</a>
+                <a asp-controller="Home" asp-action="Booking" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Booking" ? "active" : "")">Đặt Tour</a>
 
-    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div class="container py-5">
-            <div class="row justify-content-center py-5">
-                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-3 text-white mb-3 animated slideInDown">Enjoy Your Vacation With Us</h1>
-                    <p class="fs-4 text-white mb-4 animated slideInDown">Tempor erat elitr rebum at clita diam amet diam et eos erat ipsum lorem sit</p>
-                    <div class="position-relative w-75 mx-auto animated slideInDown">
-                        <input class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Eg: Thailand">
-                        <button type="button" class="btn btn-primary rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style="margin-top: 7px;">Search</button>
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
+    </nav>
 </div>
+
+<style>
+    .navbar {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background-color: #fff;
+    }
+    
+    .navbar-light .navbar-nav .nav-link {
+        color: #555;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s;
+    }
+    
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link.active {
+        color: #FF7F50;
+    }
+    
+    .navbar-brand h1 {
+        color: #FF7F50;
+        font-weight: 700;
+    }
+    
+    .auth-buttons {
+        display: flex;
+        margin-left: 1rem;
+    }
+    
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 0.5rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.5rem 1.5rem;
+        transition: all 0.2s;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #FF7F50;
+    }
+    
+
+</style>

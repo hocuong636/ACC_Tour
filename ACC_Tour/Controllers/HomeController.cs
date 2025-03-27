@@ -54,6 +54,14 @@ namespace ACC_Tour.Controllers
         {
             return View();
         }
+        public IActionResult Blog()
+        {
+            return View();
+        }
+        public IActionResult Booking()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
