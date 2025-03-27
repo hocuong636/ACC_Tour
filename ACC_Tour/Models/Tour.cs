@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace ACC_Tour.Models
 {
@@ -32,11 +33,25 @@ namespace ACC_Tour.Models
         [Range(1, int.MaxValue, ErrorMessage = "Số người phải lớn hơn 0")]
         public int MaxParticipants { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập số người tối thiểu")]
+        [Display(Name = "Số người tối thiểu")]
+        [Range(1, int.MaxValue, ErrorMessage = "Số người tối thiểu phải lớn hơn 0")]
+        public int MinParticipants { get; set; }
+
+        [Display(Name = "Slot còn lại")]
+        public int RemainingSlots { get; set; }
+
+        [Display(Name = "Trạng thái tour")]
+        public string? Status { get; set; }
+
         [Display(Name = "URL hình ảnh")]
         public string? ImageUrl { get; set; }
 
         [Display(Name = "Mô tả")]
         public string? Description { get; set; }
+
+        [Display(Name = "Hình ảnh mô tả")]
+        public virtual ICollection<DescriptionImage> DescriptionImages { get; set; } = new List<DescriptionImage>();
 
         public bool IsActive { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }
