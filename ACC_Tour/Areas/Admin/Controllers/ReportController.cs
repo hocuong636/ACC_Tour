@@ -57,7 +57,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                         TourCode = b.Tour.Id,
                         TourName = b.Tour.Name,
                         NumberOfCustomers = b.NumberOfParticipants,
-                        Revenue = b.TotalAmount,
+                        Revenue = b.TotalPrice,
                         Status = b.Status.ToString()
                     })
                     .ToListAsync();
@@ -81,9 +81,9 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     .Where(b => b.BookingDate >= firstDayOfMonth && 
                                b.BookingDate <= lastDayOfMonth &&
                                b.Status == BookingStatus.Completed)
-                    .SumAsync(b => b.TotalAmount);
+                    .SumAsync(b => b.TotalPrice);
             }
-            catch
+            catch   
             {
                 return 0;
             }
@@ -118,7 +118,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     .Select(g => new
                     {
                         Month = $"{g.Key.Month:00}/{g.Key.Year}",
-                        Revenue = g.Sum(b => b.TotalAmount)
+                        Revenue = g.Sum(b => b.TotalPrice)
                     })
                     .OrderBy(x => x.Month)
                     .ToListAsync();

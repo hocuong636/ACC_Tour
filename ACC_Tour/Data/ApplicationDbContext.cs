@@ -30,7 +30,7 @@ namespace ACC_Tour.Data
                 .HasPrecision(18, 2);  // 18 chữ số tổng cộng, 2 chữ số sau dấu phẩy
 
             builder.Entity<Booking>()
-                .Property(b => b.TotalAmount)
+                .Property(b => b.TotalPrice)
                 .HasPrecision(18, 2);  // 18 chữ số tổng cộng, 2 chữ số sau dấu phẩy
 
             // Cấu hình các relationship và ràng buộc cho Booking

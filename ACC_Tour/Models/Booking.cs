@@ -1,28 +1,37 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ACC_Tour.Models;
 
 namespace ACC_Tour.Models;
+
+public enum BookingStatus
+{
+    Pending,
+    Confirmed,
+    Cancelled,
+    Completed
+}
 
 public class Booking
 {
     public int Id { get; set; }
     
     [Required]
-    public string UserId { get; set; }
+    public int TourId { get; set; }
     
     [Required]
-    public int TourId { get; set; }
+    public string UserId { get; set; }
     
     [Required]
     public DateTime BookingDate { get; set; }
     
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, 100)]
     public int NumberOfParticipants { get; set; }
     
     [Required]
-    [Range(0, double.MaxValue)]
-    public decimal TotalAmount { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal TotalPrice { get; set; }
     
     [Required]
     public BookingStatus Status { get; set; }
@@ -38,12 +47,4 @@ public class Booking
     
     [Required]
     public virtual Tour Tour { get; set; }
-}
-
-public enum BookingStatus
-{
-    Pending,
-    Confirmed,
-    Cancelled,
-    Completed
 }

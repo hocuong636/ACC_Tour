@@ -47,16 +47,19 @@
                                         }
                                         <div>
                                             <div class="fw-bold">@Html.DisplayFor(modelItem => item.Name)</div>
-                                            <small class="text-muted">@Html.DisplayFor(modelItem => item.Description)</small>
+                                            <small class="text-muted">@(item.IsActive ? "Hoạt động" : "Ngừng hoạt động")</small>
                                         </div>
                                     </div>
                                 </td>
-                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                <td>@item.Price.ToString("N0") VNĐ</td>
+                                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
                                 <td>@Html.DisplayFor(modelItem => item.MaxParticipants)</td>
                                 <td class="text-center">
                                     <div class="btn-group">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm" title="Chi tiết">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
