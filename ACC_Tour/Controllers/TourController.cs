@@ -40,6 +40,8 @@ namespace ACC_Tour.Controllers
 
             var tour = await _context.Tours
                 .Include(t => t.Reviews)
+                    .ThenInclude(r => r.User)
+                .Include(t => t.DescriptionImages)
                 .FirstOrDefaultAsync(t => t.Id == id && t.IsActive == true);
 
             if (tour == null)

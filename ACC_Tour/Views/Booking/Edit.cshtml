@@ -1,0 +1,106 @@
+@model ACC_Tour.Models.Booking
+@{
+    ViewData["Title"] = "Cập nhật đặt tour";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Cập nhật đặt tour</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-white" asp-action="Index">Danh sách đặt tour</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Cập nhật đặt tour</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Thông tin đặt tour</h4>
+
+                        <div class="alert alert-info mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-info-circle fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">Tour: @Model.Tour.Name</h5>
+                                    <p class="mb-0">Giá: @Model.Tour.Price.ToString("N0") VNĐ/người</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form asp-action="Edit" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="TourId" />
+                            <input type="hidden" asp-for="UserId" />
+                            <input type="hidden" asp-for="BookingDate" />
+
+                            @if (Model.Status == BookingStatus.Pending)
+                            {
+                                <div class="mb-4">
+                                    <label asp-for="NumberOfParticipants" class="form-label">Số người tham gia</label>
+                                    <input asp-for="NumberOfParticipants" class="form-control" min="1" max="@Model.Tour.MaxParticipants" />
+                                    <span asp-validation-for="NumberOfParticipants" class="text-danger"></span>
+                                    <small class="text-muted">Tối đa @Model.Tour.MaxParticipants người</small>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label asp-for="PaymentMethod" class="form-label">Phương thức thanh toán</label>
+                                    <select asp-for="PaymentMethod" class="form-select">
+                                        <option value="Cash">Tiền mặt</option>
+                                        <option value="BankTransfer">Chuyển khoản</option>
+                                        <option value="Momo">Ví Momo</option>
+                                    </select>
+                                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Không thể chỉnh sửa thông tin khi đơn đặt tour không ở trạng thái chờ xử lý.
+                                </div>
+                            }
+
+                            <div class="mt-4">
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                                @if (Model.Status == BookingStatus.Pending)
+                                {
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                                    </button>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            // Cập nhật tổng tiền khi thay đổi số người
+            $('#NumberOfParticipants').on('change', function () {
+                var people = $(this).val();
+                var price = @Model.Tour.Price;
+                var total = people * price;
+                $('#TotalPrice').text(total.toLocaleString('vi-VN') + ' VNĐ');
+            });
+        });
+    </script>
+}
