@@ -99,20 +99,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Lấy giá trị ban đầu từ input ẩn
-            var initialPrice = $('#PriceValue').val();
-
-            // Nếu có giá trị, format lại cho đúng
+            // Lấy và format giá trị ban đầu từ Model
+            var initialPrice = @Json.Serialize(Model.Price);
+            
+            // Format và hiển thị giá trị ban đầu
             if (initialPrice) {
-                $('#PriceDisplay').val(Number(initialPrice).toLocaleString('en-US'));
+                $('#PriceDisplay').val(Number(initialPrice).toLocaleString('vi-VN'));
             }
 
-            // Cleave.js để format giá tiền
+            // Cấu hình Cleave.js để format giá tiền theo định dạng Việt Nam
             var cleave = new Cleave('#PriceDisplay', {
                 numeral: true,
                 numeralThousandsGroupStyle: 'thousand',
-                numeralDecimalScale: 0, // Không có số thập phân
-                numeralDecimalMark: '',
+                numeralDecimalScale: 0,
+                numeralDecimalMark: ',',
+                delimiter: '.',
                 numeralPositiveOnly: true
             });
 
