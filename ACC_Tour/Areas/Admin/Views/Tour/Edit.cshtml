@@ -32,12 +32,15 @@
                 <div class="mb-3">
                     <label asp-for="Price" class="form-label">Giá</label>
                     <div class="input-group">
-                        <input type="text"  class="form-control" value="@Model.Price.ToString("N0")" />
-                        <input type="hidden" asp-for="Price" value="@Model.Price" />
+                        <input id="PriceDisplay" type="text" class="form-control"
+                               value="@Model.Price.ToString("N0")" />
+                        <input id="PriceValue" type="hidden" asp-for="Price" value="@Model.Price" />
                         <span class="input-group-text">VNĐ</span>
                     </div>
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
+
+
 
                 <div class="mb-3">
                     <label asp-for="StartDate" class="form-label">Ngày bắt đầu</label>
@@ -95,32 +98,33 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Validate end date is after start date
-            $('#EndDate').change(function() {
-                var startDate = new Date($('#StartDate').val());
-                var endDate = new Date($(this).val());
-                if (endDate < startDate) {
-                    alert('Ngày kết thúc phải sau ngày bắt đầu!');
-                    $(this).val('');
-                }
-            });
+        $(document).ready(function () {
+            // Lấy giá trị ban đầu từ input ẩn
+            var initialPrice = $('#PriceValue').val();
 
-            // Format price input using Cleave.js
-            var priceInput = new Cleave('#PriceDisplay', {
+            // Nếu có giá trị, format lại cho đúng
+            if (initialPrice) {
+                $('#PriceDisplay').val(Number(initialPrice).toLocaleString('en-US'));
+            }
+
+            // Cleave.js để format giá tiền
+            var cleave = new Cleave('#PriceDisplay', {
                 numeral: true,
                 numeralThousandsGroupStyle: 'thousand',
+                numeralDecimalScale: 0, // Không có số thập phân
                 numeralDecimalMark: '',
-                numeralPositiveOnly: true,
-                prefix: '',
-                onValueChanged: function(e) {
-                    var value = e.target.value.replace(/,/g, '');
-                    $('#PriceValue').val(value || 0);
-                }
+                numeralPositiveOnly: true
             });
 
-            // Set initial value for hidden input
-            $('#PriceValue').val($('#PriceDisplay').val().replace(/,/g, '') || 0);
+            // Cập nhật input ẩn khi thay đổi giá trị
+            $('#PriceDisplay').on('input', function () {
+                $('#PriceValue').val(cleave.getRawValue()); // Gán giá trị thật vào input ẩn
+            });
+
+            // Cập nhật giá trị trước khi submit form
+            $('form').on('submit', function () {
+                $('#PriceValue').val(cleave.getRawValue());
+            });
         });
     </script>
 } 
