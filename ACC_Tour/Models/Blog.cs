@@ -35,6 +35,25 @@ namespace ACC_Tour.Models
         public string? Slug { get; set; }
 
         public List<BlogCategory> Categories { get; set; } = new();
+
+        public List<BlogAttachment> Attachments { get; set; } = new();
+    }
+
+    public class BlogAttachment
+    {
+        public int Id { get; set; }
+
+        [Required]
+        public string FileName { get; set; }
+
+        [Required]
+        public string FilePath { get; set; }
+
+        [Required]
+        public string FileType { get; set; } // image, video, etc.
+
+        public int BlogId { get; set; }
+        public Blog Blog { get; set; }
     }
 
     public class BlogCategory

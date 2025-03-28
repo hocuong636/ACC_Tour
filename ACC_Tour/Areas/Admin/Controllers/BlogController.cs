@@ -13,10 +13,12 @@ namespace ACC_Tour.Areas.Admin.Controllers
     public class BlogController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BlogController(ApplicationDbContext context)
+        public BlogController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -60,6 +62,9 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     blog.ImageUrl = $"/uploads/blogs/{uniqueFileName}";
                 }
 
+                // Xử lý nội dung từ editor
+                blog.Content = await ProcessEditorContent(blog.Content);
+
                 if (categoryIds != null && categoryIds.Any())
                 {
                     blog.Categories = await _context.BlogCategories
@@ -81,6 +86,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
         {
             var blog = await _context.Blogs
                 .Include(b => b.Categories)
+                .Include(b => b.Attachments)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog == null)
@@ -110,6 +116,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 {
                     var existingBlog = await _context.Blogs
                         .Include(b => b.Categories)
+                        .Include(b => b.Attachments)
                         .FirstOrDefaultAsync(b => b.Id == id);
 
                     if (existingBlog == null)
@@ -143,6 +150,9 @@ namespace ACC_Tour.Areas.Admin.Controllers
                         
                         existingBlog.ImageUrl = $"/uploads/blogs/{uniqueFileName}";
                     }
+
+                    // Xử lý nội dung từ editor
+                    blog.Content = await ProcessEditorContent(blog.Content);
 
                     existingBlog.Title = blog.Title;
                     existingBlog.Content = blog.Content;
@@ -188,7 +198,10 @@ namespace ACC_Tour.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var blog = await _context.Blogs.FindAsync(id);
+            var blog = await _context.Blogs
+                .Include(b => b.Attachments)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
             if (blog != null)
             {
                 // Xóa file hình ảnh nếu có
@@ -199,6 +212,17 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     if (System.IO.File.Exists(path))
                     {
                         System.IO.File.Delete(path);
+                    }
+                }
+
+                // Xóa các file đính kèm
+                foreach (var attachment in blog.Attachments)
+                {
+                    var attachmentPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", 
+                        attachment.FilePath.TrimStart('/'));
+                    if (System.IO.File.Exists(attachmentPath))
+                    {
+                        System.IO.File.Delete(attachmentPath);
                     }
                 }
 
@@ -221,6 +245,45 @@ namespace ACC_Tour.Areas.Admin.Controllers
             str = str.Substring(0, str.Length <= 45 ? str.Length : 45).Trim();
             str = Regex.Replace(str, @"\s", "-");
             return str;
+        }
+
+        private async Task<string> ProcessEditorContent(string content)
+        {
+            // Tạo thư mục uploads nếu chưa tồn tại
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "blogs", "content");
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Xử lý các file trong nội dung
+            var processedContent = content;
+            var base64Images = Regex.Matches(content, @"data:image/(?<type>.+?);base64,(?<data>.+?)");
+            var videoUrls = Regex.Matches(content, @"<video[^>]*src=""(?<url>[^""]+)""[^>]*>");
+
+            foreach (Match match in base64Images)
+            {
+                var imageType = match.Groups["type"].Value;
+                var imageData = match.Groups["data"].Value;
+                var imageBytes = Convert.FromBase64String(imageData);
+                var fileName = $"{Guid.NewGuid()}.{imageType}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+                var relativePath = $"/uploads/blogs/content/{fileName}";
+                processedContent = processedContent.Replace(match.Value, relativePath);
+            }
+
+            foreach (Match match in videoUrls)
+            {
+                var videoUrl = match.Groups["url"].Value;
+                if (!videoUrl.StartsWith("http"))
+                {
+                    var videoFileName = Path.GetFileName(videoUrl);
+                    var videoFilePath = Path.Combine(uploadsFolder, videoFileName);
+                    var relativePath = $"/uploads/blogs/content/{videoFileName}";
+                    processedContent = processedContent.Replace(videoUrl, relativePath);
+                }
+            }
+
+            return processedContent;
         }
     }
 } 

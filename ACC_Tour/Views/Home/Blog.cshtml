@@ -1,3 +1,4 @@
+@model IEnumerable<ACC_Tour.Models.Blog>
 @{
     ViewData["Title"] = "Blog";
 }
@@ -25,75 +26,32 @@
             </p>
         </div>
         <div class="row g-4 justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="~/img/blog-1.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
+            @foreach (var blog in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-item">
+                        <div class="blog-img">
+                            <div class="blog-img-inner">
+                                <img class="img-fluid w-100 rounded-top" src="@(string.IsNullOrEmpty(blog.ImageUrl) ? "/img/blog-1.jpg" : blog.ImageUrl)" alt="@blog.Title">
+                                <div class="blog-icon">
+                                    <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
+                                </div>
+                            </div>
+                            <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
+                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@blog.CreatedAt.ToString("dd MMMM, yyyy")</small>
+                                <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>0</a>
+                                <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>0</a>
                             </div>
                         </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>28 Tháng 1, 2024</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.7K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>1K</a>
+                        <div class="blog-content border border-top-0 rounded-bottom p-4">
+                            <p class="mb-3">Đăng bởi: @(string.IsNullOrEmpty(blog.Author) ? "Admin" : blog.Author)</p>
+                            <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="h4 text-decoration-none">@blog.Title</a>
+                            <p class="my-3">@(string.IsNullOrEmpty(blog.ShortDescription) ? blog.Content.Substring(0, Math.Min(100, blog.Content.Length)) + "..." : blog.ShortDescription)</p>
+                            <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="btn btn-primary rounded-pill py-2 px-4">Đọc thêm</a>
                         </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Đăng bởi: Admin</p>
-                        <a href="#" class="h4">Hành Trình Khám Phá Hạ Long</a>
-                        <p class="my-3">Khám phá vẻ đẹp tuyệt vời của Vịnh Hạ Long, một trong những kỳ quan thiên nhiên thế giới được UNESCO công nhận.</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Đọc thêm</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="~/img/blog-2.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>25 Tháng 1, 2024</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.5K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>800</a>
-                        </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Đăng bởi: Admin</p>
-                        <a href="#" class="h4">Ẩm Thực Đường Phố Hà Nội</a>
-                        <p class="my-3">Khám phá những món ăn đường phố ngon nhất của Hà Nội, từ phở bò truyền thống đến các món ăn vặt độc đáo.</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Đọc thêm</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="~/img/blog-3.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>20 Tháng 1, 2024</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.2K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>600</a>
-                        </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Đăng bởi: Admin</p>
-                        <a href="#" class="h4">Khám Phá Phố Cổ Hội An</a>
-                        <p class="my-3">Trải nghiệm vẻ đẹp cổ kính của phố cổ Hội An, nơi giao thoa giữa văn hóa Việt Nam và các nền văn hóa khác.</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Đọc thêm</a>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>

@@ -1,0 +1,85 @@
+@model ACC_Tour.Models.Blog
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h3 class="text-white display-3 mb-4">@Model.Title</h3>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Blog">Blog</a></li>
+            <li class="breadcrumb-item active text-white">Chi tiết</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Blog Detail Start -->
+<div class="container-fluid blog py-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="blog-detail">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100 rounded mb-4">
+                    }
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="d-flex align-items-center me-4">
+                            <i class="fa fa-calendar-alt text-primary me-2"></i>
+                            <span>@Model.CreatedAt.ToString("dd MMMM, yyyy")</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-user text-primary me-2"></i>
+                            <span>@(string.IsNullOrEmpty(Model.Author) ? "Admin" : Model.Author)</span>
+                        </div>
+                    </div>
+                    <h1 class="mb-4">@Model.Title</h1>
+                    <div class="blog-content">
+                        @Html.Raw(Model.Content)
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="blog-sidebar">
+                    <div class="sidebar-widget mb-4">
+                        <h4 class="mb-3">Bài viết mới nhất</h4>
+                        @foreach (var blog in ViewBag.RecentBlogs)
+                        {
+                            <div class="d-flex mb-3">
+                                @if (!string.IsNullOrEmpty(blog.ImageUrl))
+                                {
+                                    <img src="@blog.ImageUrl" alt="@blog.Title" class="img-fluid rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                                }
+                                <div class="ms-3">
+                                    <h6 class="mb-1"><a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="text-decoration-none">@blog.Title</a></h6>
+                                    <small class="text-muted">@blog.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Blog Detail End -->
+
+<!-- Subscribe Start -->
+<div class="container-fluid subscribe py-5">
+    <div class="container text-center py-5">
+        <div class="mx-auto text-center" style="max-width: 900px;">
+            <h5 class="subscribe-title px-3">Đăng ký</h5>
+            <h1 class="text-white mb-4">Bản tin của chúng tôi</h1>
+            <p class="text-white mb-5">Đăng ký để nhận những thông tin mới nhất về du lịch, khuyến mãi và các sự kiện đặc biệt từ chúng tôi.
+            </p>
+            <div class="position-relative mx-auto">
+                <input class="form-control border-primary rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Email của bạn">
+                <button type="button" class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 px-4 mt-2 me-2">Đăng ký</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Subscribe End --> 

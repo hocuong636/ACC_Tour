@@ -54,10 +54,35 @@ namespace ACC_Tour.Controllers
         {
             return View();
         }
-        public IActionResult Blog()
+        public async Task<IActionResult> Blog()
         {
-            return View();
+            var blogs = await _context.Blogs
+                .Where(b => b.IsPublished)
+                .OrderByDescending(b => b.CreatedAt)
+                .ToListAsync();
+            return View(blogs);
         }
+
+        public async Task<IActionResult> BlogDetail(string slug)
+        {
+            var blog = await _context.Blogs
+                .FirstOrDefaultAsync(b => b.Slug == slug && b.IsPublished);
+
+            if (blog == null)
+            {
+                return NotFound();
+            }
+
+            var recentBlogs = await _context.Blogs
+                .Where(b => b.IsPublished && b.Id != blog.Id)
+                .OrderByDescending(b => b.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            ViewBag.RecentBlogs = recentBlogs;
+            return View(blog);
+        }
+
         public IActionResult Booking()
         {
             return View();
