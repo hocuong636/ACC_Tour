@@ -20,7 +20,7 @@ namespace ACC_Tour.Controllers
         // GET: Booking
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var bookings = await _context.Bookings
                 .Include(b => b.Tour)
                 .Where(b => b.UserId == userId)
@@ -81,7 +81,7 @@ namespace ACC_Tour.Controllers
                 return RedirectToAction("Create", new { id = tourId });
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = new Booking
             {
                 TourId = tourId,
@@ -109,7 +109,7 @@ namespace ACC_Tour.Controllers
                 return NotFound();
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = await _context.Bookings
                 .Include(b => b.Tour)
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
@@ -130,7 +130,7 @@ namespace ACC_Tour.Controllers
                 return NotFound();
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = await _context.Bookings
                 .Include(b => b.Tour)
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
@@ -154,7 +154,7 @@ namespace ACC_Tour.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, BookingStatus status)
         {
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = await _context.Bookings
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
@@ -175,7 +175,7 @@ namespace ACC_Tour.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = await _context.Bookings
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 

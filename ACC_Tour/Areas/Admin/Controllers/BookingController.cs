@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ACC_Tour.Data;
 using ACC_Tour.Models;
@@ -50,22 +50,50 @@ namespace ACC_Tour.Areas.Admin.Controllers
             return View(booking);
         }
 
+        // POST: Admin/Booking/ConfirmPayment/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmPayment(int id)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            
+            if (booking == null)
+            {
+                return NotFound();
+            }
+
+            booking.PaymentStatus = "Đã thanh toán";
+            booking.Status = BookingStatus.Confirmed;
+            
+            _context.Update(booking);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Xác nhận thanh toán thành công!";
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: Admin/Booking/UpdateStatus/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, BookingStatus newStatus)
         {
             var booking = await _context.Bookings.FindAsync(id);
+            
             if (booking == null)
             {
                 return NotFound();
             }
-
+            
             booking.Status = newStatus;
+            if (newStatus == (BookingStatus)2)
+            {
+                booking.PaymentStatus = "Đã hủy";
+            }
+            _context.Update(booking);
+            
             await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Trạng thái đặt tour đã được cập nhật!";
+            TempData["SuccessMessage"] = "Cập nhật trạng thái thành công!";
             return RedirectToAction(nameof(Index));
         }
     }
-} 
+}

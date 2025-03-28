@@ -104,23 +104,10 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h4 class="card-title text-center mb-4">Đặt Tour</h4>
-                        <form asp-controller="Booking" asp-action="Create" method="post">
-                            <input type="hidden" name="TourId" value="@Model.Id" />
-                            <div class="mb-4">
-                                <label class="form-label"><i class="fas fa-users me-2"></i>Số người tham gia</label>
-                                <input type="number" class="form-control" name="NumberOfParticipants" min="1" max="@Model.MaxParticipants">
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label"><i class="fas fa-money-bill me-2"></i>Phương thức thanh toán</label>
-                                <select class="form-select" name="PaymentMethod">
-                                    <option value="Cash">Tiền mặt</option>
-                                    <option value="BankTransfer">Chuyển khoản</option>
-                                    <option value="Momo">Ví Momo</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 py-3">
-                                <i class="fas fa-ticket-alt me-2"></i>Đặt ngay
-                            </button>
+                        <form>
+                            <a asp-controller="Booking" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary w-100 py-3">
+                                    <i class="fas fa-ticket-alt me-2"></i>Đặt ngay
+                            </a>
                         </form>
                     </div>
                 </div>

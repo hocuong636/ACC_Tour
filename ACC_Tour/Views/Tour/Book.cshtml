@@ -65,13 +65,13 @@
     <script>
         $(document).ready(function () {
             function updateTotalPrice() {
-                var participants = $('#NumberOfParticipants').val();
-                var price = @Json.Serialize(Model.Price);
+                var participants = parseInt($('#NumberOfParticipants').val()) || 0;
+                var price = parseFloat(@Html.Raw(Json.Serialize(Model.Price)));
                 var total = participants * price;
                 $('#totalPrice').val(total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
             }
 
-            $('#NumberOfParticipants').on('input', updateTotalPrice);
+            $('#NumberOfParticipants').on('change keyup', updateTotalPrice);
             updateTotalPrice();
         });
     </script>

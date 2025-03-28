@@ -55,8 +55,8 @@
 
                         <form asp-action="Create" method="post">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" asp-for="TourId" value="@Model.TourId" />
-                            <input type="hidden" id="TotalPriceInput" name="TotalPrice" value="0" />
+                            <input type="hidden" asp-for="TourId" value="@Model.Tour.Id" />
+                            <input type="hidden" asp-for="TotalPrice" id="TotalPriceInput" value="@(Model.Tour.Price)" />
 
                             <div class="mb-4">
                                 <label asp-for="NumberOfParticipants" class="form-label">Số người tham gia</label>
@@ -141,15 +141,52 @@
         $(document).ready(function () {
             // Cập nhật tổng tiền khi thay đổi số người
             function updateTotalPrice() {
-                var people = $('#NumberOfParticipants').val() || 0;
-                var price = @Model.Tour.Price;
+                var people = parseInt($('#NumberOfParticipants').val()) || 0;
+                var price = parseFloat(@Model.Tour.Price);
                 var total = people * price;
+                
                 $('#TotalPriceDisplay').text(total.toLocaleString('vi-VN') + ' VNĐ');
-                $('#TotalPriceInput').val(total); // Cập nhật giá trị input hidden
+                $('#TotalPriceInput').val(total);
             }
 
-            $('#NumberOfParticipants').on('change input', updateTotalPrice);
-            updateTotalPrice(); // Cập nhật lần đầu khi tải trang
+            // Kiểm tra giới hạn số người tham gia
+            function validateParticipants() {
+                var people = parseInt($('#NumberOfParticipants').val());
+                var max = parseInt(@Model.Tour.MaxParticipants);
+                
+                if (people > max) {
+                    alert('Số người tham gia không được vượt quá ' + max + ' người');
+                    $('#NumberOfParticipants').val(max);
+                    updateTotalPrice();
+                } else if (people < 1) {
+                    $('#NumberOfParticipants').val(1);
+                    updateTotalPrice();
+                }
+            }
+
+            $('#NumberOfParticipants').on('change', validateParticipants);
+            $('#NumberOfParticipants').on('input', updateTotalPrice);
+            
+            // Cập nhật lần đầu khi tải trang
+            updateTotalPrice();
+
+            // Xử lý submit form
+            $('form').on('submit', function(e) {
+                if (!$('#PaymentMethod').val()) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn phương thức thanh toán');
+                    return false;
+                }
+
+                if (!$('#NumberOfParticipants').val() || parseInt($('#NumberOfParticipants').val()) < 1) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập số người tham gia hợp lệ');
+                    return false;
+                }
+
+                updateTotalPrice(); // Cập nhật lại tổng tiền trước khi submit
+                return true;
+            });
         });
     </script>
 }
