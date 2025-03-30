@@ -1,36 +1,55 @@
 ﻿@model ACC_Tour.ViewModels.ReportViewModel
 
 @{
-    ViewData["Title"] = "Báo cáo doanh thu";
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "Báo cáo thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0">Báo cáo doanh thu</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Báo cáo doanh thu</li>
-                </ol>
-            </nav>
+    <h1 class="h3 mb-2 text-gray-800">Báo cáo thống kê</h1>
+    <p class="mb-4">Thống kê tổng quan về doanh thu và đặt tour</p>
+
+    <!-- Date Range Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Bộ lọc thời gian</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Từ ngày</label>
+                        <input type="date" id="startDate" class="form-control" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Đến ngày</label>
+                        <input type="date" id="endDate" class="form-control" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary btn-block" onclick="updateReport()">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Thống kê tổng quan -->
-    <div class="row mb-4">
+    <!-- Overview Cards -->
+    <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Doanh thu tháng</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MonthlyRevenue.ToString("N0") đ</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Doanh thu tháng</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MonthlyRevenue.ToString("N0") VNĐ</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -42,12 +61,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Tổng số tour</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng số tour</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalTours</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-mountain fa-2x text-gray-300"></i>
+                            <i class="fas fa-map fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -59,8 +77,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Tổng khách hàng</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tổng khách hàng</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCustomers</div>
                         </div>
                         <div class="col-auto">
@@ -76,12 +93,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Đơn hàng mới hôm nay</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Đơn hàng mới</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.NewOrders</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -89,8 +105,9 @@
         </div>
     </div>
 
-    <!-- Biểu đồ doanh thu -->
+    <!-- Charts Row -->
     <div class="row">
+        <!-- Monthly Revenue Chart -->
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -104,27 +121,39 @@
             </div>
         </div>
 
+        <!-- Booking Status Chart -->
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Thống kê theo khoảng thời gian</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Trạng thái đặt tour</h6>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="startDate">Từ ngày:</label>
-                        <input type="date" class="form-control" id="startDate" />
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">Đến ngày:</label>
-                        <input type="date" class="form-control" id="endDate" />
-                    </div>
-                    <button class="btn btn-primary" onclick="getRevenueByDateRange()">
-                        Xem thống kê
-                    </button>
-                    <div class="mt-4">
-                        <div id="revenueTable"></div>
+                    <div class="chart-pie">
+                        <canvas id="bookingStatusChart"></canvas>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Tours Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Top 5 Tour có doanh thu cao nhất</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="topToursTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên Tour</th>
+                            <th>Số lượng đặt</th>
+                            <th>Doanh thu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topToursBody">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -133,72 +162,224 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Biểu đồ doanh thu theo tháng
-        var monthlyRevenueData = @Html.Raw(Json.Serialize(Model.MonthlyRevenueData));
-        var monthlyRevenueChart = new Chart(document.getElementById('monthlyRevenueChart'), {
-            type: 'line',
-            data: {
-                labels: monthlyRevenueData.Labels,
-                datasets: [{
-                    label: 'Doanh thu (đ)',
-                    data: monthlyRevenueData.Data,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString('vi-VN') + ' đ';
+        let monthlyRevenueChart;
+        let bookingStatusChart;
+
+        // Khởi tạo biểu đồ
+        function initializeCharts() {
+            const monthlyRevenueData = @Html.Raw(Json.Serialize(Model.MonthlyRevenueData));
+            const bookingStatusData = @Html.Raw(Json.Serialize(Model.BookingStatusData));
+            const topToursData = @Html.Raw(Json.Serialize(Model.TopTours));
+
+            // Biểu đồ doanh thu theo tháng
+            const monthlyCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+            monthlyRevenueChart = new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyRevenueData.labels,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: monthlyRevenueData.data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 1,
+                        barThickness: 'flex',
+                        maxBarThickness: 50
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0
+                                    }).format(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0
+                                    }).format(context.raw);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        // Hàm lấy dữ liệu theo khoảng thời gian
-        function getRevenueByDateRange() {
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
+            // Biểu đồ trạng thái đặt tour
+            const statusCtx = document.getElementById('bookingStatusChart').getContext('2d');
+            bookingStatusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: bookingStatusData.labels,
+                    datasets: [{
+                        data: bookingStatusData.data,
+                        backgroundColor: [
+                            'rgb(75, 192, 192)',  // Completed
+                            'rgb(255, 99, 132)',  // Cancelled
+                            'rgb(255, 205, 86)',  // Pending
+                            'rgb(54, 162, 235)'   // Confirmed
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
 
-            if (!startDate || !endDate) {
-                alert('Vui lòng chọn khoảng thời gian');
+            // Cập nhật bảng top tours
+            updateTopToursTable(topToursData);
+        }
+
+        // Cập nhật bảng top tours
+        function updateTopToursTable(topTours) {
+            const tbody = document.getElementById('topToursBody');
+            tbody.innerHTML = '';
+
+            if (!topTours || topTours.length === 0) {
+                const row = tbody.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 3;
+                cell.textContent = 'Không có dữ liệu';
+                cell.style.textAlign = 'center';
                 return;
             }
 
-            $.get('/Admin/Report/GetRevenueByDateRange', { startDate: startDate, endDate: endDate })
-                .done(function(data) {
-                    var table = '<table class="table table-bordered">' +
-                        '<thead><tr>' +
-                        '<th>Ngày</th>' +
-                        '<th>Tour</th>' +
-                        '<th>Số khách</th>' +
-                        '<th>Doanh thu</th>' +
-                        '<th>Trạng thái</th>' +
-                        '</tr></thead><tbody>';
+            topTours.forEach((tour, index) => {
+                const row = tbody.insertRow();
+                
+                // Tên tour với thứ hạng
+                const nameCell = row.insertCell(0);
+                nameCell.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <span class="mr-2 font-weight-bold">#${index + 1}</span>
+                        <span>${tour.tourName}</span>
+                    </div>
+                `;
 
-                    data.forEach(function(item) {
-                        table += '<tr>' +
-                            '<td>' + item.time + '</td>' +
-                            '<td>' + item.tourName + '</td>' +
-                            '<td>' + item.numberOfCustomers + '</td>' +
-                            '<td>' + item.revenue.toLocaleString('vi-VN') + ' đ</td>' +
-                            '<td>' + item.status + '</td>' +
-                            '</tr>';
-                    });
+                // Số lượng đặt
+                const bookingsCell = row.insertCell(1);
+                bookingsCell.innerHTML = `
+                    <div class="text-center">
+                        <span class="font-weight-bold">${tour.totalBookings}</span>
+                        <small class="d-block text-muted">${tour.totalCustomers} khách</small>
+                    </div>
+                `;
 
-                    table += '</tbody></table>';
-                    $('#revenueTable').html(table);
-                })
-                .fail(function(error) {
-                    alert('Có lỗi xảy ra khi lấy dữ liệu');
-                });
+                // Doanh thu
+                const revenueCell = row.insertCell(2);
+                revenueCell.innerHTML = `
+                    <div class="text-right">
+                        <span class="font-weight-bold">${new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(tour.totalRevenue)}</span>
+                        <small class="d-block text-muted">TB: ${new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(tour.averageRevenue)}/đơn</small>
+                    </div>
+                `;
+            });
         }
+
+        // Cập nhật báo cáo theo khoảng thời gian
+        async function updateReport() {
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            if (!startDate.value || !endDate.value) {
+                toastr.warning('Vui lòng chọn khoảng thời gian');
+                return;
+            }
+
+            try {
+                // Cập nhật doanh thu theo khoảng thời gian
+                const response = await fetch(`/Admin/Report/GetRevenueByDateRange?startDate=${startDate.value}&endDate=${endDate.value}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+
+                // Cập nhật tổng quan
+                document.querySelector('.text-primary + .h5').textContent = 
+                    new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(data.totalRevenue);
+                
+                document.querySelector('.text-warning + .h5').textContent = data.totalBookings;
+
+                // Cập nhật biểu đồ doanh thu theo tháng
+                const revenueResponse = await fetch('/Admin/Report/GetMonthlyRevenueData');
+                if (!revenueResponse.ok) throw new Error('Failed to fetch revenue data');
+                const revenueData = await revenueResponse.json();
+                
+                monthlyRevenueChart.data.labels = revenueData.labels;
+                monthlyRevenueChart.data.datasets[0].data = revenueData.data;
+                monthlyRevenueChart.update();
+
+                // Cập nhật top tours
+                const tourResponse = await fetch(`/Admin/Report/GetTourStatistics?startDate=${startDate.value}&endDate=${endDate.value}`);
+                if (!tourResponse.ok) throw new Error('Failed to fetch tour statistics');
+                const tourStats = await tourResponse.json();
+                updateTopToursTable(tourStats.slice(0, 5));
+
+                toastr.success('Đã cập nhật báo cáo thành công');
+            } catch (error) {
+                console.error('Error:', error);
+                toastr.error('Có lỗi xảy ra khi cập nhật báo cáo');
+            }
+        }
+
+        // Khởi tạo khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            
+            // Set default date range if not set
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            
+            if (!startDate.value) {
+                const defaultStart = new Date();
+                defaultStart.setMonth(defaultStart.getMonth() - 1);
+                startDate.value = defaultStart.toISOString().split('T')[0];
+            }
+            
+            if (!endDate.value) {
+                const today = new Date();
+                endDate.value = today.toISOString().split('T')[0];
+            }
+        });
     </script>
 }
 
