@@ -61,7 +61,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label asp-for="MaxParticipants" class="form-label">Số người tối đa</label>
-                            <input asp-for="MaxParticipants" class="form-control" type="number" min="1" />
+                            <input asp-for="MaxParticipants" class="form-control" type="number" min="1"/>
                             <span asp-validation-for="MaxParticipants" class="text-danger"></span>
                         </div>
 
@@ -148,6 +148,10 @@
                     alert('Số người tối thiểu không được lớn hơn số người tối đa');
                     $('#MinParticipants').val('');
                 }
+            });
+			$('#MaxParticipants').change(function(){
+				var maxParticipants = parseInt($('#MaxParticipants').val());
+				'#RemainingSlots' = maxParticipants;
             });
         });
     </script>

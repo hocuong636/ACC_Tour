@@ -50,6 +50,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
         // GET: Admin/Tour/Create
         public IActionResult Create()
         {
+
             return View(new TourViewModel());
         }
 
@@ -68,6 +69,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     EndDate = viewModel.EndDate,
                     MaxParticipants = viewModel.MaxParticipants,
                     MinParticipants = viewModel.MinParticipants,
+                    RemainingSlots = viewModel.MaxParticipants,
                     Description = viewModel.Description,
                     IsActive = true
                 };
@@ -156,6 +158,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     tour.EndDate = viewModel.EndDate;
                     tour.MaxParticipants = viewModel.MaxParticipants;
                     tour.MinParticipants = viewModel.MinParticipants;
+                    tour.RemainingSlots = viewModel.MaxParticipants;
                     tour.Description = viewModel.Description;
                     tour.IsActive = viewModel.IsActive;
 

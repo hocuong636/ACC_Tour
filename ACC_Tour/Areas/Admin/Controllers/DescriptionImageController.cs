@@ -32,6 +32,8 @@ namespace ACC_Tour.Controllers
             var descriptionImages = await _context.DescriptionImages
                 .Include(d => d.Tour)
                 .ToListAsync();
+
+            ViewBag.Tours = await _context.Tours.ToListAsync();
             return View(descriptionImages);
         }
 

@@ -50,7 +50,7 @@ namespace ACC_Tour.ViewModels
         [Required(ErrorMessage = "Vui lòng nhập mô tả tour")]
         [Display(Name = "Mô tả")]
         [MinLength(50, ErrorMessage = "Mô tả phải có ít nhất 50 ký tự")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public bool IsActive { get; set; }
 

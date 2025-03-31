@@ -91,8 +91,11 @@ namespace ACC_Tour.Controllers
                 TotalPrice = calculatedTotal,
                 Status = BookingStatus.Pending,
                 PaymentMethod = paymentMethod,
-                PaymentStatus = "Chờ thanh toán"
+                PaymentStatus = "Chờ thanh toán",
             };
+            // Cập nhật số lượng slot còn lại của tour
+            tour.RemainingSlots -= numberOfParticipants;
+            _context.Update(tour);
 
             _context.Add(booking);
             await _context.SaveChangesAsync();
