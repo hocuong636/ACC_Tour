@@ -1,9 +1,10 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model ACC_Tour.ViewModels.ContactViewModel
+@model ACC_Tour.Models.Feedback
+
 @{
-    ViewData["Title"] = "Liên hệ";
+    ViewData["Title"] = "Đánh giá";
 }
 
 <div class="carousel-header">
@@ -19,8 +20,8 @@
                 <div class="carousel-caption">
                     <div class="p-3" style="max-width: 900px;">
                         <div class="text-center mb-5">
-                            <h1 class="display-2 text-capitalize text-white mb-4">Liên hệ với chúng tôi</h1>
-                            <p class="mb-0">Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào</p>
+                            <h1 class="display-2 text-capitalize text-white mb-4">Chia sẻ trải nghiệm của bạn</h1>
+                            <p class="mb-0">Hãy cho chúng tôi biết ý kiến của bạn về dịch vụ của chúng tôi</p>
                         </div>
                     </div>
                 </div>
@@ -29,7 +30,7 @@
     </div>
 </div>
 
-<!-- Contact Start -->
+<!-- Feedback Start -->
 <div class="container-fluid py-5">
     <div class="container py-5">
         <div class="row g-4">
@@ -60,39 +61,38 @@
             </div>
             <div class="col-lg-8">
                 <div class="bg-light rounded p-4">
-                    <form asp-action="Contact" method="post">
+                    <form asp-controller="Feedback" asp-action="Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-12">
                                 <div class="form-floating">
-                                    <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Họ và tên">
-                                    <label asp-for="Name">Họ và tên</label>
-                                    <span asp-validation-for="Name" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input asp-for="Email" type="email" class="form-control" id="email" placeholder="Email">
-                                    <label asp-for="Email">Email</label>
-                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                    <input asp-for="Title" type="text" class="form-control" id="title" placeholder="Tiêu đề">
+                                    <label asp-for="Title">Tiêu đề</label>
+                                    <span asp-validation-for="Title" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input asp-for="Subject" type="text" class="form-control" id="subject" placeholder="Tiêu đề">
-                                    <label asp-for="Subject">Tiêu đề</label>
-                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                    <textarea asp-for="Content" class="form-control" placeholder="Nội dung" id="content" style="height: 150px"></textarea>
+                                    <label asp-for="Content">Nội dung</label>
+                                    <span asp-validation-for="Content" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea asp-for="Message" class="form-control" placeholder="Nội dung" id="message" style="height: 150px"></textarea>
-                                    <label asp-for="Message">Nội dung</label>
-                                    <span asp-validation-for="Message" class="text-danger"></span>
+                                <label asp-for="Rating" class="form-label d-block">Đánh giá</label>
+                                <div class="rating-input">
+                                    @for (int i = 5; i >= 1; i--)
+                                    {
+                                        <input type="radio" id="star@(i)" name="Rating" value="@i" />
+                                        <label for="star@(i)" title="@i sao">
+                                            <i class="far fa-star"></i>
+                                        </label>
+                                    }
                                 </div>
+                                <span asp-validation-for="Rating" class="text-danger d-block"></span>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Gửi tin nhắn</button>
+                                <button class="btn btn-primary w-100 py-3" type="submit">Gửi đánh giá</button>
                             </div>
                         </div>
                     </form>
@@ -101,7 +101,7 @@
         </div>
     </div>
 </div>
-<!-- Contact End -->
+<!-- Feedback End -->
 
 <!-- Google Map Start -->
 <div class="container-fluid p-0">
@@ -113,4 +113,71 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        $(document).ready(function() {
+            // Star rating system
+            $('.rating-input input').on('change', function() {
+                var $this = $(this);
+                var $labels = $this.closest('.rating-input').find('label');
+                
+                $labels.each(function() {
+                    var $label = $(this);
+                    var $star = $label.find('i');
+                    
+                    if ($label.attr('for') === $this.attr('id') || 
+                        parseInt($label.attr('for').replace('star', '')) > parseInt($this.val())) {
+                        $star.removeClass('fas').addClass('far');
+                    } else {
+                        $star.removeClass('far').addClass('fas');
+                    }
+                });
+            });
+
+            // Hover effect
+            $('.rating-input label').hover(
+                function() {
+                    var $this = $(this);
+                    var $stars = $this.prevAll('label').addBack();
+                    $stars.find('i').removeClass('far').addClass('fas');
+                },
+                function() {
+                    var $container = $(this).closest('.rating-input');
+                    var $checked = $container.find('input:checked');
+                    var $labels = $container.find('label');
+                    
+                    $labels.find('i').removeClass('fas').addClass('far');
+                    
+                    if ($checked.length) {
+                        var rating = parseInt($checked.val());
+                        $labels.each(function() {
+                            var $label = $(this);
+                            if (parseInt($label.attr('for').replace('star', '')) <= rating) {
+                                $label.find('i').removeClass('far').addClass('fas');
+                            }
+                        });
+                    }
+                }
+            );
+        });
+    </script>
 }
+
+<style>
+    .rating-input {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        font-size: 1.5rem;
+    }
+
+    .rating-input input {
+        display: none;
+    }
+
+    .rating-input label {
+        cursor: pointer;
+        padding: 0 0.2em;
+        color: var(--bs-warning);
+    }
+</style>

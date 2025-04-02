@@ -149,9 +149,11 @@
                     $('#MinParticipants').val('');
                 }
             });
-			$('#MaxParticipants').change(function(){
-				var maxParticipants = parseInt($('#MaxParticipants').val());
-				'#RemainingSlots' = maxParticipants;
+
+            // Update RemainingSlots when MaxParticipants changes
+            $('#MaxParticipants').change(function() {
+                var maxParticipants = parseInt($('#MaxParticipants').val());
+                $('#RemainingSlots').val(maxParticipants);
             });
         });
     </script>

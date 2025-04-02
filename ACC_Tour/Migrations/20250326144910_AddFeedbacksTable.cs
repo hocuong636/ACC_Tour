@@ -29,7 +29,7 @@ namespace ACC_Tour.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TourId = table.Column<int>(type: "int", nullable: false)
+                    TourId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

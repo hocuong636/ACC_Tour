@@ -30,13 +30,13 @@ namespace ACC_Tour.Models
         public bool IsApproved { get; set; } = false;
 
         // Foreign key for User
-        [Required]
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
 
         // Optional: If feedback is related to a specific tour
+        [Display(Name = "Tour")]
         public int? TourId { get; set; }
 
         [ForeignKey("TourId")]

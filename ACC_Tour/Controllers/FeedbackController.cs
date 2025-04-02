@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using ACC_Tour.Data;
 using ACC_Tour.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ACC_Tour.Controllers
 {
@@ -35,9 +37,9 @@ namespace ACC_Tour.Controllers
 
         // GET: Feedback/Create
         [Authorize]
-        public IActionResult Create(int? tourId)
+        public IActionResult Create()
         {
-            ViewBag.TourId = tourId;
+            ViewBag.Tours = new SelectList(_context.Tours, "Id", "Name");
             return View();
         }
 
@@ -49,14 +51,61 @@ namespace ACC_Tour.Controllers
         {
             if (ModelState.IsValid)
             {
-                feedback.UserId = _userManager.GetUserId(User);
-                feedback.CreatedAt = DateTime.Now;
-                feedback.IsApproved = false;
+                try
+                {
+                    // Lấy thông tin người dùng hiện tại
+                    var userId = _userManager.GetUserId(User);
+                    if (string.IsNullOrEmpty(userId))
+                    {
+                        TempData["ErrorMessage"] = "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.";
+                        return RedirectToAction("Login", "Account");
+                    }
 
-                _context.Add(feedback);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(MyFeedbacks));
+                    // Gán thông tin cho feedback
+                    feedback.UserId = userId;
+                    feedback.CreatedAt = DateTime.Now;
+                    feedback.IsApproved = false;
+
+                    _context.Add(feedback);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Đánh giá của bạn đã được gửi thành công và đang chờ duyệt.";
+                    return RedirectToAction(nameof(MyFeedbacks));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại sau.");
+                    TempData["ErrorMessage"] = "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại sau.";
+                    // Log the exception for debugging
+                    System.Diagnostics.Debug.WriteLine($"Error creating feedback: {ex.Message}");
+                }
             }
+            else
+            {
+                // Log validation errors for debugging
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Validation error: {error.ErrorMessage}");
+                    }
+                }
+                
+                // Add validation errors to TempData
+                var errorMessages = new List<string>();
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        errorMessages.Add(error.ErrorMessage);
+                    }
+                }
+                
+                if (errorMessages.Any())
+                {
+                    TempData["ErrorMessage"] = string.Join("<br/>", errorMessages);
+                }
+            }
+            ViewBag.Tours = new SelectList(_context.Tours, "Id", "Name");
             return View(feedback);
         }
 

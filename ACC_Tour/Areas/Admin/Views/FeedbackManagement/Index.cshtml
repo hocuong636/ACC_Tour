@@ -14,7 +14,7 @@
         <div class="card-header py-3">
             <div class="row align-items-center">
                 <div class="col">
-                    <h6 class="m-0 font-weight-bold text-primary">Danh sách phản hồi</h6>
+                    <h6 class="m-0 fw-bold text-primary">Danh sách phản hồi</h6>
                 </div>
                 <div class="col-auto">
                     <div class="btn-group" role="group">
@@ -72,24 +72,24 @@
                                 <td>
                                     @if (item.IsApproved)
                                     {
-                                        <span class="badge badge-success">Đã duyệt</span>
+                                        <span class="badge bg-success">Đã duyệt</span>
                                     }
                                     else
                                     {
-                                        <span class="badge badge-warning">Chờ duyệt</span>
+                                        <span class="badge bg-warning">Chờ duyệt</span>
                                     }
                                 </td>
                                 <td>
                                     <div class="btn-group">
                                         <a asp-action="Details" asp-route-id="@item.Id" 
-                                           class="btn btn-sm btn-info" data-toggle="tooltip" title="Chi tiết">
+                                           class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         @if (!item.IsApproved)
                                         {
                                             <form asp-action="Approve" asp-route-id="@item.Id" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm btn-success" data-toggle="tooltip" title="Duyệt">
+                                                <button type="submit" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Duyệt">
                                                     <i class="fas fa-check"></i>
                                                 </button>
                                             </form>
@@ -98,7 +98,7 @@
                                         {
                                             <form asp-action="Reject" asp-route-id="@item.Id" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Hủy duyệt">
+                                                <button type="submit" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Hủy duyệt">
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </form>
@@ -106,7 +106,7 @@
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" 
                                               class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Xóa">
+                                            <button type="submit" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Xóa">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -122,6 +122,10 @@
 </div>
 
 @section Scripts {
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             // Initialize DataTable
@@ -133,7 +137,10 @@
             });
 
             // Initialize tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
 
             // Filter buttons
             $('[data-filter]').click(function() {

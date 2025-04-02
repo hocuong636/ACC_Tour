@@ -9,7 +9,7 @@
 <!-- Page Header Start -->
 <div class="container-fluid page-header mb-5 py-5">
     <div class="container">
-        <h1 class="display-3 text-white mb-3 animated slideInDown">Tour du lịch</h1>
+        <h1 class="display-3 text-blue mb-3 animated slideInDown">Tour du lịch</h1>
         <nav aria-label="breadcrumb animated slideInDown">
             <ol class="breadcrumb text-uppercase">
                 <li class="breadcrumb-item"><a class="text-black" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
@@ -19,7 +19,18 @@
     </div>
 </div>
 <!-- Page Header End -->
-
+<!-- Search Bar Start -->
+<div class="container-fluid search-bar position-relative" style="top: -50%; transform: translateY(-50%);">
+    <div class="container">
+        <div class="position-relative rounded-pill w-100 mx-auto p-5" style="background: rgba(19, 53, 123, 0.4);">
+            <form asp-controller="Tour" asp-action="Index" method="get">
+                <input name="searchString" class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Tìm kiếm tour...">
+                <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 position-absolute me-2" style="top: 50%; right: 46px; transform: translateY(-50%);">Tìm kiếm</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Search Bar End -->
 <!-- Package Start -->
 <div class="container-fluid tour py-5">
     <div class="container py-5">

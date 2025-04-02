@@ -101,27 +101,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tour in ViewBag.UpcomingToursList)
+                        @if (ViewBag.UpcomingToursList != null && ViewBag.UpcomingToursList.Count > 0)
+                        {
+                            @foreach (var tour in ViewBag.UpcomingToursList)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(tour.ImageUrl))
+                                            {
+                                                <img src="@tour.ImageUrl" alt="@tour.Name" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                            }
+                                            <div>
+                                                <div class="fw-bold">@tour.Name</div>
+                                                <small class="text-muted">@tour.Description</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@tour.StartDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@tour.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@tour.Price.ToString("N0") đ</td>
+                                    <td>
+                                        <span class="badge bg-info">@tour.Status</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        @if (!string.IsNullOrEmpty(tour.ImageUrl))
-                                        {
-                                            <img src="@tour.ImageUrl" alt="@tour.Name" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
-                                        }
-                                        <div>
-                                            <div class="fw-bold">@tour.Name</div>
-                                            <small class="text-muted">@tour.Description</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>@tour.StartDate.ToString("dd/MM/yyyy")</td>
-                                <td>@tour.EndDate.ToString("dd/MM/yyyy")</td>
-                                <td>@tour.Price.ToString("N0") đ</td>
-                                <td>
-                                    <span class="badge bg-success">Đang hoạt động</span>
-                                </td>
+                                <td colspan="5" class="text-center">Không có tour sắp tới</td>
                             </tr>
                         }
                     </tbody>

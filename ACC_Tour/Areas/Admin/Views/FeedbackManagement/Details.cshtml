@@ -9,7 +9,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Chi tiết phản hồi</h1>
         <a asp-action="Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left mr-2"></i>Quay lại
+            <i class="fas fa-arrow-left me-2"></i>Quay lại
         </a>
     </div>
 
@@ -17,20 +17,20 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Nội dung phản hồi</h6>
+                    <h6 class="m-0 fw-bold text-primary">Nội dung phản hồi</h6>
                     <div>
                         @if (Model.IsApproved)
                         {
-                            <span class="badge badge-success">Đã duyệt</span>
+                            <span class="badge bg-success">Đã duyệt</span>
                         }
                         else
                         {
-                            <span class="badge badge-warning">Chờ duyệt</span>
+                            <span class="badge bg-warning">Chờ duyệt</span>
                         }
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title font-weight-bold">@Model.Title</h5>
+                    <h5 class="card-title fw-bold">@Model.Title</h5>
                     <div class="mb-3">
                         @for (int i = 1; i <= 5; i++)
                         {
@@ -52,23 +52,23 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Thông tin chi tiết</h6>
+                    <h6 class="m-0 fw-bold text-primary">Thông tin chi tiết</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="text-muted mb-1">Người gửi</label>
-                        <p class="font-weight-bold mb-0">@Model.User.UserName</p>
+                        <p class="fw-bold mb-0">@Model.User.UserName</p>
                     </div>
                     @if (Model.Tour != null)
                     {
                         <div class="mb-3">
                             <label class="text-muted mb-1">Tour</label>
-                            <p class="font-weight-bold mb-0">@Model.Tour.Name</p>
+                            <p class="fw-bold mb-0">@Model.Tour.Name</p>
                         </div>
                     }
                     <div class="mb-3">
                         <label class="text-muted mb-1">Ngày tạo</label>
-                        <p class="font-weight-bold mb-0">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+                        <p class="fw-bold mb-0">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -78,7 +78,7 @@
                             <form asp-action="Approve" asp-route-id="@Model.Id" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-check mr-2"></i>Duyệt
+                                    <i class="fas fa-check me-2"></i>Duyệt
                                 </button>
                             </form>
                         }
@@ -87,7 +87,7 @@
                             <form asp-action="Reject" asp-route-id="@Model.Id" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-times mr-2"></i>Hủy duyệt
+                                    <i class="fas fa-times me-2"></i>Hủy duyệt
                                 </button>
                             </form>
                         }
@@ -95,7 +95,7 @@
                               class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash mr-2"></i>Xóa
+                                <i class="fas fa-trash me-2"></i>Xóa
                             </button>
                         </form>
                     </div>

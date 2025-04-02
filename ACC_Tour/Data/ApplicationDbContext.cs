@@ -78,7 +78,19 @@ namespace ACC_Tour.Data
                 .HasForeignKey(di => di.TourId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Cấu hình cho Feedback
+            builder.Entity<Feedback>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Feedback>()
+                .HasOne(f => f.Tour)
+                .WithMany()
+                .HasForeignKey(f => f.TourId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         }
     }
 }
