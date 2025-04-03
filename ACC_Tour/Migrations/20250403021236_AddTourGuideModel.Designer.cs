@@ -4,6 +4,7 @@ using ACC_Tour.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ACC_Tour.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250403021236_AddTourGuideModel")]
+    partial class AddTourGuideModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -358,41 +361,6 @@ namespace ACC_Tour.Migrations
                     b.ToTable("Tours");
                 });
 
-            modelBuilder.Entity("ACC_Tour.Models.TourAssignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TourGuideId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TourId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TourGuideId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("TourAssignments");
-                });
-
             modelBuilder.Entity("ACC_Tour.Models.TourGuide", b =>
                 {
                     b.Property<int>("Id")
@@ -715,25 +683,6 @@ namespace ACC_Tour.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ACC_Tour.Models.TourAssignment", b =>
-                {
-                    b.HasOne("ACC_Tour.Models.TourGuide", "TourGuide")
-                        .WithMany("TourAssignments")
-                        .HasForeignKey("TourGuideId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ACC_Tour.Models.Tour", "Tour")
-                        .WithMany()
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Tour");
-
-                    b.Navigation("TourGuide");
-                });
-
             modelBuilder.Entity("BlogBlogCategory", b =>
                 {
                     b.HasOne("ACC_Tour.Models.Blog", null)
@@ -851,11 +800,6 @@ namespace ACC_Tour.Migrations
                     b.Navigation("DescriptionImages");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("ACC_Tour.Models.TourGuide", b =>
-                {
-                    b.Navigation("TourAssignments");
                 });
 #pragma warning restore 612, 618
         }

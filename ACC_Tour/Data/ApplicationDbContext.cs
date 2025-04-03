@@ -17,9 +17,10 @@ namespace ACC_Tour.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
-        public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<DescriptionImage> DescriptionImages { get; set; }
 
+        public DbSet<DescriptionImage> DescriptionImages { get; set; }
+        public DbSet<TourGuide> TourGuides { get; set; }
+        public DbSet<TourAssignment> TourAssignments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -78,19 +79,20 @@ namespace ACC_Tour.Data
                 .HasForeignKey(di => di.TourId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Cấu hình cho Feedback
-            builder.Entity<Feedback>()
-                .HasOne(f => f.User)
-                .WithMany()
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Feedback>()
-                .HasOne(f => f.Tour)
+
+            // Cấu hình cho TourAssignment
+            builder.Entity<TourAssignment>()
+                .HasOne(ta => ta.Tour)
                 .WithMany()
-                .HasForeignKey(f => f.TourId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .HasForeignKey(ta => ta.TourId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TourAssignment>()
+                .HasOne(ta => ta.TourGuide)
+                .WithMany(tg => tg.TourAssignments)
+                .HasForeignKey(ta => ta.TourGuideId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

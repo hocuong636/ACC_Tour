@@ -24,8 +24,7 @@ namespace ACC_Tour.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                tours = tours.Where(t => t.Name.Contains(searchString) 
-                                    || t.Description.Contains(searchString));
+                tours = tours.Where(t => t.Name.Contains(searchString));
             }
 
             return View(await tours.ToListAsync());

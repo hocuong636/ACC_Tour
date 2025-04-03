@@ -6,11 +6,7 @@
 @inject ACC_Tour.Data.ApplicationDbContext _context
 @{
     ViewData["Title"] = "Chi tiết Tour";
-    var tourFeedbacks = _context.Feedbacks
-        .Include(f => f.User)
-        .Where(f => f.TourId == Model.Id && f.IsApproved)
-        .OrderByDescending(f => f.CreatedAt)
-        .ToList();
+
 }
 
 <!-- Page Header Start -->
@@ -96,43 +92,7 @@
                             }
                         </div>
                         
-                        @if (!tourFeedbacks.Any())
-                        {
-                            <div class="text-center py-4">
-                                <i class="fas fa-comments text-muted fa-3x mb-3"></i>
-                                <p class="text-muted">Chưa có đánh giá nào cho tour này.</p>
-                                <p class="text-muted">Hãy là người đầu tiên chia sẻ trải nghiệm của bạn!</p>
-                            </div>
-                        }
-                        else
-                        {
-                            foreach (var feedback in tourFeedbacks)
-                            {
-                                <div class="d-flex mb-4 border-bottom pb-4">
-                                    <div class="flex-grow-1">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <h6 class="mb-0">@feedback.User.UserName</h6>
-                                            <small class="text-muted">@feedback.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
-                                        </div>
-                                        <div class="mb-2">
-                                            @for (int i = 1; i <= 5; i++)
-                                            {
-                                                if (i <= feedback.Rating)
-                                                {
-                                                    <i class="fas fa-star text-warning"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="far fa-star text-warning"></i>
-                                                }
-                                            }
-                                        </div>
-                                        <h6 class="mb-2">@feedback.Title</h6>
-                                        <p class="mb-0">@feedback.Content</p>
-                                    </div>
-                                </div>
-                            }
-                        }
+
                     </div>
                 </div>
             </div>
