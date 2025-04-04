@@ -67,7 +67,7 @@ namespace ACC_Tour.Controllers
             }
 
             // Kiểm tra số lượng người tham gia
-            if (numberOfParticipants <= 0 || numberOfParticipants > tour.MaxParticipants)
+            if (numberOfParticipants <= 0 || numberOfParticipants > tour.RemainingSlots)
             {
                 ModelState.AddModelError("NumberOfParticipants", "Số người tham gia không hợp lệ");
                 return RedirectToAction("Create", new { id = tourId });
@@ -95,6 +95,7 @@ namespace ACC_Tour.Controllers
             };
             // Cập nhật số lượng slot còn lại của tour
             tour.RemainingSlots -= numberOfParticipants;
+            tour.IsActive = tour.RemainingSlots > 0; // Nếu còn slot thì tour vẫn hoạt động, ngược lại thì không
             _context.Update(tour);
 
             _context.Add(booking);

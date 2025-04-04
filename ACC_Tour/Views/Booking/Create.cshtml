@@ -60,9 +60,9 @@
 
                             <div class="mb-4">
                                 <label asp-for="NumberOfParticipants" class="form-label">Số người tham gia</label>
-                                <input asp-for="NumberOfParticipants" class="form-control" min="1" max="@Model.Tour.MaxParticipants" required />
+                                <input asp-for="NumberOfParticipants" class="form-control" min="1" max="@Model.Tour.RemainingSlots" required />
                                 <span asp-validation-for="NumberOfParticipants" class="text-danger"></span>
-                                <small class="text-muted">Tối đa @Model.Tour.MaxParticipants người</small>
+                                <small class="text-muted">Tối đa @Model.Tour.RemainingSlots người</small>
                             </div>
 
                             <div class="mb-4">
@@ -152,7 +152,7 @@
             // Kiểm tra giới hạn số người tham gia
             function validateParticipants() {
                 var people = parseInt($('#NumberOfParticipants').val());
-                var max = parseInt(@Model.Tour.MaxParticipants);
+                var max = parseInt(@Model.Tour.RemainingSlots);
                 
                 if (people > max) {
                     alert('Số người tham gia không được vượt quá ' + max + ' người');
