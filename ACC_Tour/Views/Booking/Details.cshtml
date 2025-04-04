@@ -1,0 +1,169 @@
+@model ACC_Tour.Models.Booking
+@{
+    ViewData["Title"] = "Chi tiết đặt tour";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Chi tiết đặt tour</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-white" asp-action="Index">Danh sách đặt tour</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Chi tiết đặt tour</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Thông tin Tour -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">Thông tin Tour</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="@Model.Tour.ImageUrl" class="img-fluid rounded" alt="@Model.Tour.Name">
+                            </div>
+                            <div class="col-md-8">
+                                <h5>
+                                    <a asp-controller="Tour" asp-action="Details" asp-route-id="@Model.TourId">
+                                        @Model.Tour.Name
+                                    </a>
+                                </h5>
+                                <p class="text-muted mb-2">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    @Model.Tour.StartDate.ToString("dd/MM/yyyy") - @Model.Tour.EndDate.ToString("dd/MM/yyyy")
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-users me-2"></i>
+                                    Số người tối đa: @Model.Tour.MaxParticipants người
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chi tiết đặt Tour -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">Chi tiết đặt Tour</h4>
+                        <hr />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p><strong>Mã đặt tour:</strong> #@Model.Id</p>
+                                <p><strong>Ngày đặt:</strong> @Model.BookingDate.ToString("dd/MM/yyyy HH:mm")</p>
+                                <p><strong>Số người tham gia:</strong> @Model.NumberOfParticipants người</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>
+                                    <strong>Trạng thái:</strong>
+                                    @switch (Model.Status)
+                                    {
+                                        case BookingStatus.Pending:
+                                            <span class="badge bg-warning">Chờ xử lý</span>
+                                            break;
+                                        case BookingStatus.Confirmed:
+                                            <span class="badge bg-success">Đã xác nhận</span>
+                                            break;
+                                        case BookingStatus.Cancelled:
+                                            <span class="badge bg-danger">Đã hủy</span>
+                                            break;
+                                        case BookingStatus.Completed:
+                                            <span class="badge bg-info">Hoàn thành</span>
+                                            break;
+                                    }
+                                </p>
+                                <p>
+                                    <strong>Thanh toán:</strong>
+                                    <span class="badge bg-secondary">@Model.PaymentStatus</span>
+                                </p>
+                                <p><strong>Phương thức thanh toán:</strong> @Model.PaymentMethod</p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-primary">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">Tổng tiền:</span>
+                                <span class="h5 mb-0">@Model.TotalPrice.ToString("N0") VNĐ</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                            @if (Model.Status == BookingStatus.Pending)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="d-inline" 
+                                      onsubmit="return confirm('Bạn có chắc muốn hủy đặt tour này?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-times me-2"></i>Hủy đặt tour
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Thông tin thanh toán -->
+                @if (Model.Status == BookingStatus.Pending)
+                {
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Thông tin thanh toán</h5>
+                            <hr />
+                            <p class="mb-3">Vui lòng thanh toán theo một trong các phương thức sau:</p>
+                            
+                            <div class="mb-3">
+                                <h6>Chuyển khoản ngân hàng:</h6>
+                                <p class="mb-1"><strong>Ngân hàng:</strong> Vietcombank</p>
+                                <p class="mb-1"><strong>Số tài khoản:</strong> 1234567890</p>
+                                <p class="mb-1"><strong>Chủ tài khoản:</strong> CÔNG TY DU LỊCH ACC</p>
+                                <p class="mb-0"><strong>Nội dung:</strong> TOUR@Model.Id</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6>Ví điện tử Momo:</h6>
+                                <p class="mb-1"><strong>Số điện thoại:</strong> 0123456789</p>
+                                <p class="mb-0"><strong>Nội dung:</strong> TOUR@Model.Id</p>
+                            </div>
+
+                            <div class="alert alert-warning mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Đơn đặt tour sẽ được xác nhận sau khi nhận được thanh toán.
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Hỗ trợ -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Hỗ trợ</h5>
+                        <hr />
+                        <p class="mb-3">Nếu bạn cần hỗ trợ, vui lòng liên hệ:</p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>
+                            Hotline: <a href="tel:1900xxxx">1900xxxx</a>
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            Email: <a href="mailto:support@acctour.com">support@acctour.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

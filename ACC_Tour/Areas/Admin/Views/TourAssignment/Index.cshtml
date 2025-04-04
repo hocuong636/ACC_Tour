@@ -1,0 +1,81 @@
+@model IEnumerable<ACC_Tour.Models.TourAssignment>
+
+@{
+    ViewData["Title"] = "Quản lý phân công tour";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a asp-action="Create" class="btn btn-primary">Thêm phân công mới</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tour</th>
+                            <th>Hướng dẫn viên</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Tour.Name</td>
+                                <td>@item.TourGuide.Name</td>
+                                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @switch (item.Status)
+                                    {
+                                        case AssignmentStatus.Pending:
+                                            <span class="badge badge-warning">Chờ xác nhận</span>
+                                            break;
+                                        case AssignmentStatus.Confirmed:
+                                            <span class="badge badge-info">Đã xác nhận</span>
+                                            break;
+                                        case AssignmentStatus.Completed:
+                                            <span class="badge badge-success">Đã hoàn thành</span>
+                                            break;
+                                        case AssignmentStatus.Cancelled:
+                                            <span class="badge badge-danger">Đã hủy</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "order": [[2, "desc"]], // Sắp xếp theo ngày bắt đầu giảm dần
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Vietnamese.json"
+                }
+            });
+        });
+    </script>
+} 

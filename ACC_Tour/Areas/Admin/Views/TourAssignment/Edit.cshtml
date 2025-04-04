@@ -1,0 +1,81 @@
+@model ACC_Tour.Models.TourAssignment
+
+@{
+    ViewData["Title"] = "Chỉnh sửa phân công tour";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group">
+                    <label asp-for="TourId" class="control-label">Tour</label>
+                    <select asp-for="TourId" class="form-control" asp-items="@(new SelectList(ViewBag.Tours, "Id", "Name"))">
+                        <option value="">-- Chọn tour --</option>
+                    </select>
+                    <span asp-validation-for="TourId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TourGuideId" class="control-label">Hướng dẫn viên</label>
+                    <select asp-for="TourGuideId" class="form-control" asp-items="@(new SelectList(ViewBag.TourGuides, "Id", "Name"))">
+                        <option value="">-- Chọn hướng dẫn viên --</option>
+                    </select>
+                    <span asp-validation-for="TourGuideId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label">Ngày bắt đầu</label>
+                    <input asp-for="StartDate" class="form-control" type="date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EndDate" class="control-label">Ngày kết thúc</label>
+                    <input asp-for="EndDate" class="form-control" type="date" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label">Trạng thái</label>
+                    <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<AssignmentStatus>()"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label">Ghi chú</label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Kiểm tra ngày kết thúc phải sau ngày bắt đầu
+            $("#EndDate").change(function() {
+                var startDate = new Date($("#StartDate").val());
+                var endDate = new Date($(this).val());
+                if (endDate < startDate) {
+                    alert("Ngày kết thúc phải sau ngày bắt đầu");
+                    $(this).val("");
+                }
+            });
+        });
+    </script>
+} 

@@ -1,4 +1,4 @@
-@model ACC_Tour.Models.Tour
+@model ACC_Tour.ViewModels.TourViewModel
 
 @{
     ViewData["Title"] = "Sửa Tour";
@@ -13,7 +13,7 @@
             Thông tin Tour
         </div>
         <div class="card-body">
-            <form asp-action="Edit">
+            <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 
@@ -31,9 +31,16 @@
 
                 <div class="mb-3">
                     <label asp-for="Price" class="form-label">Giá</label>
-                    <input asp-for="Price" class="form-control" type="number" />
+                    <div class="input-group">
+                        <input id="PriceDisplay" type="text" class="form-control"
+                               value="@Model.Price.ToString("N0")" />
+                        <input id="PriceValue" type="hidden" asp-for="Price" value="@Model.Price" />
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
+
+
 
                 <div class="mb-3">
                     <label asp-for="StartDate" class="form-label">Ngày bắt đầu</label>
@@ -48,15 +55,34 @@
                 </div>
 
                 <div class="mb-3">
+                    <label asp-for="MinParticipants" class="form-label">Số người tối thiểu</label>
+                    <input asp-for="MinParticipants" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="MinParticipants" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="MaxParticipants" class="form-label">Số người tối đa</label>
-                    <input asp-for="MaxParticipants" class="form-control" type="number" />
+                    <input asp-for="MaxParticipants" class="form-control" type="number" min="1" />
                     <span asp-validation-for="MaxParticipants" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="ImageUrl" class="form-label">URL hình ảnh</label>
-                    <input asp-for="ImageUrl" class="form-control" />
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <label asp-for="ImageFile" class="form-label">Hình ảnh Tour</label>
+                    <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mt-2">
+                            <img src="@Model.ImageUrl" alt="Tour Image" style="max-width: 200px; max-height: 200px;" class="img-thumbnail" />
+                        </div>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsActive" class="form-check-label">Tour đang hoạt động</label>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -70,4 +96,54 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy và format giá trị ban đầu từ Model
+            var initialPrice = @Json.Serialize(Model.Price);
+            
+            // Format và hiển thị giá trị ban đầu
+            if (initialPrice) {
+                $('#PriceDisplay').val(Number(initialPrice).toLocaleString('vi-VN'));
+            }
+
+            // Cấu hình Cleave.js để format giá tiền theo định dạng Việt Nam
+            var cleave = new Cleave('#PriceDisplay', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                numeralDecimalScale: 0,
+                numeralDecimalMark: ',',
+                delimiter: '.',
+                numeralPositiveOnly: true
+            });
+
+            // Cập nhật input ẩn khi thay đổi giá trị
+            $('#PriceDisplay').on('input', function () {
+                var rawValue = cleave.getRawValue();
+                $('#PriceValue').val(rawValue);
+                
+                // Validate price range
+                var price = parseInt(rawValue);
+                if (price <= 0 || price > 1000000000) {
+                    alert('Giá tour phải lớn hơn 0 và nhỏ 1,000,000,000 VNĐ');
+                    $('#PriceDisplay').val('');
+                    $('#PriceValue').val('');
+                }
+            });
+
+            // Cập nhật giá trị trước khi submit form
+            $('form').on('submit', function () {
+                var rawValue = cleave.getRawValue();
+                var price = parseInt(rawValue);
+                
+                if (price <= 0 || price < 1000 || price > 1000000000) {
+                    alert('Giá tour phải lớn hơn 0 và từ 1,000 đến 1,000,000,000 VNĐ');
+                    return false;
+                }
+                
+                $('#PriceValue').val(rawValue);
+                return true;
+            });
+        });
+    </script>
 } 

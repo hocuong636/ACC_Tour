@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link href="~/css/admin.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
     <div class="d-flex">
@@ -34,6 +36,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-white" href="/Admin/DescriptionImage">
+						<i class="fas fa-calendar-check"></i> Quản lý hình ảnh mô tả
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-white" href="/Admin/Booking">
                         <i class="fas fa-calendar-check"></i> Quản lý Đặt Tour
                     </a>
@@ -41,6 +48,27 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/Admin/User">
                         <i class="fas fa-users"></i> Quản lý Người dùng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/Admin/Report">
+                        <i class="fas fa-university"></i> Báo cáo thống kê
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/Admin/Blog">
+                        <i class="fas fa-university"></i> Quản lý bài viết
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/Admin/TourGuide">
+                        <i class="fas fa-users"></i> Quản lý Hướng Dẫn Viên
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/Admin/TourAssignment">
+                        <i class="fas fa-users"></i> Phân công Hướng Dẫn Viên
                     </a>
                 </li>
             </ul>
@@ -54,7 +82,7 @@
                         <h4 class="mb-0">@ViewData["Title"]</h4>
                         <div class="user-info">
                             <span class="me-3">Xin chào, @User.Identity?.Name</span>
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-danger btn-sm">
                                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                                 </button>

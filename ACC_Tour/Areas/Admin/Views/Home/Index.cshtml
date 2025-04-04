@@ -87,9 +87,6 @@
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 fw-bold text-primary">Tour sắp tới</h6>
-            <a asp-area="Admin" asp-controller="Tour" asp-action="Create" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus me-2"></i>Thêm Tour mới
-            </a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -100,46 +97,40 @@
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
                             <th>Giá</th>
-                            <th>Số người tối đa</th>
                             <th>Trạng thái</th>
-                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tour in ViewBag.UpcomingToursList)
+                        @if (ViewBag.UpcomingToursList != null && ViewBag.UpcomingToursList.Count > 0)
+                        {
+                            @foreach (var tour in ViewBag.UpcomingToursList)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(tour.ImageUrl))
+                                            {
+                                                <img src="@tour.ImageUrl" alt="@tour.Name" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                            }
+                                            <div>
+                                                <div class="fw-bold">@tour.Name</div>
+                                                <small class="text-muted">@tour.Description</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@tour.StartDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@tour.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@tour.Price.ToString("N0") đ</td>
+                                    <td>
+                                        <span class="badge bg-info">@tour.Status</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        @if (!string.IsNullOrEmpty(tour.ImageUrl))
-                                        {
-                                            <img src="@tour.ImageUrl" alt="@tour.Name" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
-                                        }
-                                        <div>
-                                            <div class="fw-bold">@tour.Name</div>
-                                            <small class="text-muted">@tour.Description</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>@tour.StartDate.ToString("dd/MM/yyyy")</td>
-                                <td>@tour.EndDate.ToString("dd/MM/yyyy")</td>
-                                <td>@tour.Price.ToString("N0") đ</td>
-                                <td>@tour.MaxParticipants</td>
-                                <td>
-                                    <span class="badge bg-success">Đang hoạt động</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                        <a asp-area="Admin" asp-controller="Tour" asp-action="Edit" asp-route-id="@tour.Id" 
-                                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a asp-area="Admin" asp-controller="Tour" asp-action="Delete" asp-route-id="@tour.Id" 
-                                           class="btn btn-danger btn-sm" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
+                                <td colspan="5" class="text-center">Không có tour sắp tới</td>
                             </tr>
                         }
                     </tbody>

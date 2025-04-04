@@ -36,13 +36,13 @@
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
 
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Price)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Price)</dd>
+                        <dd class="col-sm-8">@Model.Price.ToString("N0") VNĐ</dd>
 
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.StartDate)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.StartDate)</dd>
+                        <dd class="col-sm-8">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
 
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EndDate)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.EndDate)</dd>
+                        <dd class="col-sm-8">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
                     </dl>
                 </div>
                 <div class="col-md-6">

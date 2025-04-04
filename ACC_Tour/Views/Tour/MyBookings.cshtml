@@ -1,0 +1,78 @@
+@model IEnumerable<ACC_Tour.Models.Booking>
+
+@{
+    ViewData["Title"] = "Tour đã đặt";
+}
+
+<div class="container mt-4">
+    <h2>Tour đã đặt</h2>
+    <hr />
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var booking in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@booking.Tour.Name</h5>
+                            <p class="card-text">
+                                <strong>Ngày đặt:</strong> @booking.BookingDate.ToString("dd/MM/yyyy HH:mm")<br />
+                                <strong>Số người:</strong> @booking.NumberOfParticipants<br />
+                                <strong>Tổng tiền:</strong> @booking.TotalPrice.ToString("N0") VNĐ<br />
+                                <strong>Phương thức thanh toán:</strong> @booking.PaymentMethod<br />
+                                <strong>Trạng thái thanh toán:</strong> @booking.PaymentStatus<br />
+                                <strong>Trạng thái:</strong> 
+                                @switch (booking.Status)
+                                {
+                                    case BookingStatus.Pending:
+                                        <span class="badge bg-warning">Chờ xác nhận</span>
+                                        break;
+                                    case BookingStatus.Confirmed:
+                                        <span class="badge bg-success">Đã xác nhận</span>
+                                        break;
+                                    case BookingStatus.Cancelled:
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                        break;
+                                    case BookingStatus.Completed:
+                                        <span class="badge bg-info">Đã hoàn thành</span>
+                                        break;
+                                }
+                            </p>
+                            <div class="mt-3">
+                                <a asp-action="Details" asp-route-id="@booking.TourId" class="btn btn-primary btn-sm">Xem chi tiết tour</a>
+                                @if (booking.Status == BookingStatus.Pending)
+                                {
+                                    <button class="btn btn-danger btn-sm" onclick="cancelBooking(@booking.Id)">Hủy đặt tour</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Bạn chưa đặt tour nào. <a asp-action="Index">Xem danh sách tour</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function cancelBooking(bookingId) {
+            if (confirm('Bạn có chắc chắn muốn hủy đặt tour này?')) {
+                $.post('/Tour/CancelBooking/' + bookingId, function(result) {
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert('Có lỗi xảy ra khi hủy đặt tour. Vui lòng thử lại sau.');
+                    }
+                });
+            }
+        }
+    </script>
+} 

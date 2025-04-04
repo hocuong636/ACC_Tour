@@ -1,0 +1,127 @@
+@model IEnumerable<ACC_Tour.Models.Booking>
+@{
+    ViewData["Title"] = "Danh sách đặt tour";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Danh sách đặt tour</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Danh sách đặt tour</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên Tour</th>
+                        <th>Ngày đặt</th>
+                        <th>Số người</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thanh toán</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@item.TourId">
+                                    @item.Tour.Name
+                                </a>
+                            </td>
+                            <td>@item.BookingDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.NumberOfParticipants người</td>
+                            <td>@item.TotalPrice.ToString("N0") VNĐ</td>
+                            <td>
+                                @switch (item.Status)
+                                {
+                                    case BookingStatus.Pending:
+                                        <span class="badge bg-warning">Chờ xử lý</span>
+                                        break;
+                                    case BookingStatus.Confirmed:
+                                        <span class="badge bg-success">Đã xác nhận</span>
+                                        break;
+                                    case BookingStatus.Cancelled:
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                        break;
+                                    case BookingStatus.Completed:
+                                        <span class="badge bg-info">Hoàn thành</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@item.PaymentStatus</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.Id" 
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    @if (item.Status == BookingStatus.Pending)
+                                    {
+                                        <form asp-action="Cancel" asp-route-id="@item.Id" method="post" 
+                                              style="display: inline;"
+                                              onsubmit="return confirm('Bạn có chắc muốn hủy đặt tour này?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <h4 class="text-muted">Bạn chưa có đặt tour nào</h4>
+                <a asp-controller="Tour" asp-action="Index" class="btn btn-primary mt-3">
+                    <i class="fas fa-search me-2"></i>Tìm Tour
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto hide alerts after 5 seconds
+        setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000);
+    </script>
+}

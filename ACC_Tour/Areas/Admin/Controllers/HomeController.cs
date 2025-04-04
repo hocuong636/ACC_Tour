@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Data;
-using ACC_Tour.Models;
+using ACC_Tour.Data;
 
 namespace ACC_Tour.Areas.Admin.Controllers
 {
@@ -32,6 +31,17 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 .Where(t => t.IsActive && t.StartDate > now)
                 .OrderBy(t => t.StartDate)
                 .Take(5)
+                .Select(t => new
+                {
+                    t.Id,
+                    t.Name,
+                    t.Description,
+                    t.StartDate,
+                    t.EndDate,
+                    t.Price,
+                    t.ImageUrl,
+                    Status = "Sắp tới"
+                })
                 .ToList();
 
             return View();

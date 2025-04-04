@@ -1,4 +1,4 @@
-@model ACC_Tour.Models.Tour
+@model ACC_Tour.ViewModels.TourViewModel
 
 @{
     ViewData["Title"] = "Thêm Tour mới";
@@ -24,7 +24,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form asp-action="Create">
+            <form asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 
                 <div class="row">
@@ -38,35 +38,43 @@
                         <div class="mb-3">
                             <label asp-for="Price" class="form-label">Giá</label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input asp-for="Price" class="form-control" type="number" />
+                                <input id="displayPrice" type="text" class="form-control text-end" placeholder="Nhập giá tour" />
+                                <span class="input-group-text">VNĐ</span>
+                                <input asp-for="Price" type="hidden" />
                             </div>
                             <span asp-validation-for="Price" class="text-danger"></span>
+                            <small class="form-text text-muted">Giá từ 1,000 đến 1,000,000,000 VNĐ</small>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="StartDate" class="form-label">Ngày bắt đầu</label>
-                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <input asp-for="StartDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="EndDate" class="form-label">Ngày kết thúc</label>
-                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <input asp-for="EndDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label asp-for="MaxParticipants" class="form-label">Số người tối đa</label>
-                            <input asp-for="MaxParticipants" class="form-control" type="number" />
+                            <input asp-for="MaxParticipants" class="form-control" type="number" min="1"/>
                             <span asp-validation-for="MaxParticipants" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="ImageUrl" class="form-label">URL hình ảnh</label>
-                            <input asp-for="ImageUrl" class="form-control" />
-                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <label asp-for="MinParticipants" class="form-label">Số người tối thiểu</label>
+                            <input asp-for="MinParticipants" class="form-control" type="number" min="1" />
+                            <span asp-validation-for="MinParticipants" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageFile" class="form-label">Hình ảnh</label>
+                            <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -89,4 +97,64 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize Cleave.js for price formatting
+            var cleave = new Cleave('#displayPrice', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                numeralDecimalScale: 0,
+                numeralPositiveOnly: true
+            });
+
+            // Update hidden price field before form submission
+            $('form').on('submit', function() {
+                var rawValue = $('#displayPrice').val().replace(/,/g, '');
+                $('#Price').val(rawValue);
+                
+                // Validate price range
+                var price = parseInt(rawValue);
+                if (price <= 0 || price < 1000 || price > 1000000000) {
+                    alert('Giá tour phải lớn hơn 0 và từ 1,000 đến 1,000,000,000 VNĐ');
+                    return false;
+                }
+                return true;
+            });
+
+            // Set initial value if editing
+            var initialPrice = $('#Price').val();
+            if (initialPrice) {
+                $('#displayPrice').val(parseInt(initialPrice).toLocaleString('vi-VN'));
+            }
+
+            // Validate EndDate is after StartDate
+            $('#StartDate, #EndDate').change(function () {
+                var startDate = new Date($('#StartDate').val());
+                var endDate = new Date($('#EndDate').val());
+                
+                if (endDate <= startDate) {
+                    alert('Ngày kết thúc phải sau ngày bắt đầu');
+                    $('#EndDate').val('');
+                }
+            });
+
+            // Validate MinParticipants is not greater than MaxParticipants
+            $('#MaxParticipants, #MinParticipants').change(function () {
+                var maxParticipants = parseInt($('#MaxParticipants').val());
+                var minParticipants = parseInt($('#MinParticipants').val());
+                
+                if (minParticipants > maxParticipants) {
+                    alert('Số người tối thiểu không được lớn hơn số người tối đa');
+                    $('#MinParticipants').val('');
+                }
+            });
+
+            // Update RemainingSlots when MaxParticipants changes
+            $('#MaxParticipants').change(function() {
+                var maxParticipants = parseInt($('#MaxParticipants').val());
+                $('#RemainingSlots').val(maxParticipants);
+            });
+        });
+    </script>
 } 

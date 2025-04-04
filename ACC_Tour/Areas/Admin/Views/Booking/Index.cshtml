@@ -1,94 +1,40 @@
 @model IEnumerable<ACC_Tour.Models.Booking>
 
 @{
-    ViewData["Title"] = "Quản lý Đặt Tour";
+    ViewData["Title"] = "Quản lý đặt tour";
     Layout = "_AdminLayout";
 }
 
 <div class="container-fluid">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
-            <li class="breadcrumb-item active">Quản lý Đặt Tour</li>
-        </ol>
-    </nav>
-
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng đặt tour</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Count()</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Đã xác nhận</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Count(b => b.Status == BookingStatus.Confirmed)</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Chờ xác nhận</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Count(b => b.Status == BookingStatus.Pending)</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Đã hủy</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Count(b => b.Status == BookingStatus.Cancelled)</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Quản lý đặt tour</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Quản lý đặt tour</li>
+                </ol>
+            </nav>
         </div>
     </div>
 
-    <!-- Booking List -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách đặt tour</h6>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    }
+
+    <!-- Danh sách đặt tour -->
+    <div class="card shadow">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="bookingTable">
                     <thead>
                         <tr>
-                            <th>Mã đặt tour</th>
+                            <th>Mã đơn</th>
                             <th>Khách hàng</th>
                             <th>Tour</th>
                             <th>Ngày đặt</th>
@@ -100,56 +46,73 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var booking in Model)
+                        @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@booking.Id</td>
-                                <td>@booking.User?.UserName</td>
-                                <td>@booking.Tour?.Name</td>
-                                <td>@booking.BookingDate.ToString("dd/MM/yyyy")</td>
-                                <td>@booking.NumberOfParticipants</td>
-                                <td>@booking.TotalAmount.ToString("N0") VNĐ</td>
+                                <td>#@item.Id</td>
+                                <td>@item.User.UserName</td>
+                                <td>@item.Tour.Name</td>
+                                <td>@item.BookingDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.NumberOfParticipants</td>
+                                <td>@item.TotalPrice.ToString("N0") đ</td>
                                 <td>
-                                    @switch (booking.Status)
-                                    {
-                                        case BookingStatus.Pending:
-                                            <span class="badge bg-warning">Chờ xác nhận</span>
-                                            break;
-                                        case BookingStatus.Confirmed:
-                                            <span class="badge bg-success">Đã xác nhận</span>
-                                            break;
-                                        case BookingStatus.Cancelled:
-                                            <span class="badge bg-danger">Đã hủy</span>
-                                            break;
-                                        case BookingStatus.Completed:
-                                            <span class="badge bg-info">Hoàn thành</span>
-                                            break;
-                                    }
-                                </td>
-                                <td>
-                                    <span class="badge @(booking.PaymentStatus == "Paid" ? "bg-success" : "bg-warning")">
-                                        @(booking.PaymentStatus == "Paid" ? "Đã thanh toán" : "Chưa thanh toán")
+                                    <span class="badge bg-@(item.Status switch {
+                                        BookingStatus.Pending => "warning",
+                                        BookingStatus.Confirmed => "success",
+                                        BookingStatus.Cancelled => "danger",
+                                        BookingStatus.Completed => "info",
+                                        _ => "secondary"
+                                    })">
+                                        @(item.Status switch {
+                                            BookingStatus.Pending => "Chờ xử lý",
+                                            BookingStatus.Confirmed => "Đã xác nhận",
+                                            BookingStatus.Cancelled => "Đã hủy",
+                                            BookingStatus.Completed => "Hoàn thành",
+                                            _ => item.Status.ToString()
+                                        })
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/Admin/Booking/Details/@booking.Id" class="btn btn-info btn-sm">
-                                        <i class="fas fa-info-circle"></i>
-                                    </a>
-                                    @if (booking.Status == BookingStatus.Pending)
+                                    @if (item.Status == BookingStatus.Cancelled)
                                     {
-                                        <form asp-action="UpdateStatus" asp-route-id="@booking.Id" asp-route-status="Confirmed" method="post" class="d-inline">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-success btn-sm">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        </form>
-                                        <form asp-action="UpdateStatus" asp-route-id="@booking.Id" asp-route-status="Cancelled" method="post" class="d-inline">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </form>
+                                        <span class="badge bg-danger">Đã hủy</span>
                                     }
+                                    else
+                                    {
+                                        <span class="badge bg-@(item.PaymentStatus == "Đã thanh toán" ? "success" : "warning")">
+                                            @item.PaymentStatus
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="Details" asp-route-id="@item.Id" 
+                                           class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        @if (item.Status != BookingStatus.Cancelled)
+                                        {
+                                            @if (item.PaymentStatus != "Đã thanh toán")
+                                            {
+                                                <form asp-action="ConfirmPayment" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="newStatus" value="@BookingStatus.Cancelled" />
+                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                        onclick="return confirm('Bạn có chắc chắn muốn hủy đơn đặt tour này?');">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -163,13 +126,9 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Handle status update confirmation
-            $('form[asp-action="UpdateStatus"]').on('submit', function (e) {
-                var status = $(this).find('button[type="submit"]').hasClass('btn-success') ? 'xác nhận' : 'hủy';
-                if (!confirm('Bạn có chắc chắn muốn ' + status + ' đặt tour này?')) {
-                    e.preventDefault();
-                }
+            $('#bookingTable').DataTable({
+                "order": [[3, "desc"]] // Sắp xếp theo ngày đặt, mới nhất lên đầu
             });
         });
     </script>
-} 
+}

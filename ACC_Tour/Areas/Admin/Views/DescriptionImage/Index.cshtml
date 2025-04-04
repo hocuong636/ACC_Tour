@@ -1,0 +1,120 @@
+﻿@model IEnumerable<ACC_Tour.Models.DescriptionImage>
+
+@{
+    ViewData["Title"] = "Quản lý hình ảnh mô tả";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Quản lý hình ảnh mô tả</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/Admin/Home">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Quản lý hình ảnh mô tả</li>
+                </ol>
+            </nav>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Thêm mới
+        </a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <select id="tourFilter" class="form-select" asp-items="@(new SelectList(ViewBag.Tours, "Id", "Name"))">
+                <option value="">Tất cả các Tour</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Tour</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.ImageFile" alt="Tour image" style="height: 100px; width: auto; object-fit: cover;" />
+                                </td>
+                                <td>@item.Tour?.Name</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-image" 
+                                            data-id="@item.Id" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa hình ảnh này không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Xử lý xóa hình ảnh
+            $('.delete-image').click(function() {
+                var id = $(this).data('id');
+                $('#deleteForm').attr('action', '/Admin/DescriptionImage/Delete/' + id);
+            });
+
+            // Xử lý lọc theo tour
+            $('#tourFilter').change(function() {
+                var selectedTourId = $(this).val();
+                var rows = $('table tbody tr');
+
+                if (selectedTourId === '') {
+                    // Hiển thị tất cả các hàng nếu không chọn tour
+                    rows.show();
+                } else {
+                    // Lọc và hiển thị các hàng phù hợp với tour được chọn
+                    // Cache selected option text to improve performance
+                    var selectedOption = $('#tourFilter option:selected').text().trim();
+                    
+                    rows.each(function() {
+                        var tourText = $(this).find('td:eq(1)').text().trim();
+                        $(this).toggle(tourText === selectedOption);
+                    });
+                }
+            });
+        });
+    </script>
+}

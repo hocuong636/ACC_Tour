@@ -1,9 +1,12 @@
-﻿@*
+﻿@using Microsoft.EntityFrameworkCore
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model ACC_Tour.Models.Tour
+@inject ACC_Tour.Data.ApplicationDbContext _context
 @{
     ViewData["Title"] = "Chi tiết Tour";
+
 }
 
 <!-- Page Header Start -->
@@ -26,59 +29,85 @@
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-8">
-                <div class="mb-5">
-                    <img class="img-fluid w-100 mb-4" src="@Model.ImageUrl" alt="">
-                    <h4 class="mb-4">@Model.Name</h4>
-                    <p>@Model.Description</p>
+                <!-- Tour Main Image and Info -->
+                <div class="card mb-5 shadow-sm">
+                    <img class="card-img-top" src="@Model.ImageUrl" alt="@Model.Name">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary mb-4">@Model.Name</h2>
+                        <p class="card-text">@Model.Description</p>
+                    </div>
                 </div>
-                <div class="mb-5">
-                    <h4 class="mb-4">Lịch trình Tour</h4>
-                    <p>Thời gian: @Model.StartDate.ToString("dd/MM/yyyy") - @Model.EndDate.ToString("dd/MM/yyyy")</p>
-                    <p>Số người tối đa: @Model.MaxParticipants người</p>
-                    <p>Giá tour: @Model.Price.ToString("N0") VNĐ/người</p>
-                </div>
-                @if (Model.Reviews != null && Model.Reviews.Any())
+
+                <!-- Tour Description Images -->
+                @if (Model.DescriptionImages != null && Model.DescriptionImages.Any())
                 {
                     <div class="mb-5">
-                        <h4 class="mb-4">Đánh giá từ khách hàng</h4>
-                        @foreach (var review in Model.Reviews)
-                        {
-                            <div class="d-flex mb-4">
-                                <div class="ps-3">
-                                    <h6>@review.User.FirstName @review.User.LastName</h6>
-                                    <small>@review.ReviewDate.ToString("dd/MM/yyyy")</small>
-                                    <div class="d-flex mb-3">
-                                        @for (int i = 0; i < review.Rating; i++)
-                                        {
-                                            <small class="fa fa-star text-primary"></small>
-                                        }
+                        <h4 class="mb-4">Hình ảnh Tour</h4>
+                        <div class="row g-4">
+                            @foreach (var image in Model.DescriptionImages)
+                            {
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100">
+                                        <img src="@image.ImageFile" class="card-img-top" alt="Hình ảnh tour" style="height: 200px; object-fit: cover;">
                                     </div>
-                                    <p>@review.Comment</p>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
                 }
+
+                <!-- Tour Schedule -->
+                <div class="card mb-5 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Lịch trình Tour</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><i class="far fa-calendar-alt text-primary me-2"></i>Bắt đầu: @Model.StartDate.ToString("dd/MM/yyyy")</p>
+                                <p><i class="far fa-calendar-alt text-primary me-2"></i>Kết thúc: @Model.EndDate.ToString("dd/MM/yyyy")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><i class="fas fa-users text-primary me-2"></i>Số người còn lại: @Model.RemainingSlots người</p>
+                                <p><i class="fas fa-money-bill-wave text-primary me-2"></i>Giá tour: @Model.Price.ToString("N0") VNĐ/người</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews -->
+                <div class="card mb-5 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="card-title mb-0">Đánh giá từ khách hàng</h4>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Feedback" asp-action="Create" asp-route-tourId="@Model.Id" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-star me-2"></i>Viết đánh giá
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập để đánh giá
+                                </a>
+                            }
+                        </div>
+                        
+
+                    </div>
+                </div>
             </div>
+
+            <!-- Booking Form -->
             <div class="col-lg-4">
-                <div class="bg-light p-4 mb-5">
-                    <h4 class="mb-4">Đặt Tour</h4>
-                    <form asp-controller="Booking" asp-action="Create" method="post">
-                        <input type="hidden" name="TourId" value="@Model.Id" />
-                        <div class="mb-3">
-                            <label class="form-label">Số người tham gia</label>
-                            <input type="number" class="form-control" name="NumberOfParticipants" min="1" max="@Model.MaxParticipants">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phương thức thanh toán</label>
-                            <select class="form-select" name="PaymentMethod">
-                                <option value="Cash">Tiền mặt</option>
-                                <option value="BankTransfer">Chuyển khoản</option>
-                                <option value="Momo">Ví Momo</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Đặt ngay</button>
-                    </form>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Đặt Tour</h4>
+                        <form>
+                            <a asp-controller="Booking" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary w-100 py-3">
+                                    <i class="fas fa-ticket-alt me-2"></i>Đặt ngay
+                            </a>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

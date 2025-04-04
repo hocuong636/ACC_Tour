@@ -1,7 +1,10 @@
-﻿@model IEnumerable<ACC_Tour.Models.Tour>
+﻿@using Microsoft.EntityFrameworkCore
+@model IEnumerable<ACC_Tour.Models.Tour>
+@inject ACC_Tour.Data.ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Trang chủ";
+
 }
 
 <!-- Carousel Start -->
@@ -49,8 +52,8 @@
     <div class="container py-5">
         <div class="row g-5 align-items-center">
             <div class="col-lg-5">
-                <div class="h-100" style="border: 50px solid; border-color: transparent #13357B transparent #13357B;">
-                    <img src="~/img/about-img.jpg" class="img-fluid w-100 h-100" alt="">
+                <div class="h-100" style="border: 30px solid; border-color: transparent #13357B transparent #13357B;">
+                    <img src="~/img/about.jpg" class="img-fluid w-100 h-100" alt="">
                 </div>
             </div>
             <div class="col-lg-7" style="background: linear-gradient(rgba(255, 255, 255, .8), rgba(255, 255, 255, .8)), url(~/img/about-img-1.png);">
@@ -79,34 +82,34 @@
 </div>
 <!-- About End -->
 
-<!-- Services Start -->
-<div class="container-fluid bg-light service py-5">
-    <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h5 class="section-title px-3">Dịch vụ</h5>
-            <h1 class="mb-0">Dịch vụ của chúng tôi</h1>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="row g-4">
-                    <div class="col-12">
-                        <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 pe-0">
-                            <div class="service-content text-end">
-                                <h5 class="mb-4">Tour trong nước</h5>
-                                <p class="mb-0">Khám phá vẻ đẹp của Việt Nam với các tour du lịch trong nước đa dạng, phong phú.</p>
-                            </div>
-                            <div class="service-icon p-4">
-                                <i class="fa fa-globe fa-4x text-primary"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Thêm các service items khác -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Services End -->
+ @*<!-- Services Start -->
+ <div class="container-fluid bg-light service py-5">
+     <div class="container py-5">
+         <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+             <h5 class="section-title px-3">Dịch vụ</h5>
+             <h1 class="mb-0">Dịch vụ của chúng tôi</h1>
+         </div>
+         <div class="row g-4">
+             <div class="col-lg-6">
+                 <div class="row g-4">
+                     <div class="col-12">
+                         <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 pe-0">
+                             <div class="service-content text-end">
+                                 <h5 class="mb-4">Tour trong nước</h5>
+                                 <p class="mb-0">Khám phá vẻ đẹp của Việt Nam với các tour du lịch trong nước đa dạng, phong phú.</p>
+                             </div>
+                             <div class="service-icon p-4">
+                                 <i class="fa fa-globe fa-4x text-primary"></i>
+                             </div>
+                         </div>
+                     </div>
+                     <!-- Thêm các service items khác -->
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+ <!-- Services End -->*@
 
 <!-- Tour Packages Start -->
 <div class="container-fluid tour py-5">
@@ -138,3 +141,17 @@
     </div>
 </div>
 <!-- Tour Packages End -->
+
+<!-- Testimonial Start -->
+<div class="container-fluid testimonial py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Đánh giá</h5>
+            <h1 class="mb-0">Khách hàng nói gì về chúng tôi</h1>
+        </div>
+        <div class="text-center mt-4">
+            <a asp-controller="Feedback" asp-action="Index" class="btn btn-primary rounded-pill py-3 px-5">Xem tất cả đánh giá</a>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->

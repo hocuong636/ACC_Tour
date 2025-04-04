@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using ACC_Tour.Data;
 using ACC_Tour.Models;
-using Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +51,39 @@ namespace ACC_Tour.Controllers
             return View();
         }
         public IActionResult Testimonial()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Blog()
+        {
+            var blogs = await _context.Blogs
+                .Where(b => b.IsPublished)
+                .OrderByDescending(b => b.CreatedAt)
+                .ToListAsync();
+            return View(blogs);
+        }
+
+        public async Task<IActionResult> BlogDetail(string slug)
+        {
+            var blog = await _context.Blogs
+                .FirstOrDefaultAsync(b => b.Slug == slug && b.IsPublished);
+
+            if (blog == null)
+            {
+                return NotFound();
+            }
+
+            var recentBlogs = await _context.Blogs
+                .Where(b => b.IsPublished && b.Id != blog.Id)
+                .OrderByDescending(b => b.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            ViewBag.RecentBlogs = recentBlogs;
+            return View(blog);
+        }
+
+        public IActionResult Booking()
         {
             return View();
         }

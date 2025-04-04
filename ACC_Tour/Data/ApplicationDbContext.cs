@@ -1,8 +1,8 @@
+using ACC_Tour.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ACC_Tour.Models;
 
-namespace Data
+namespace ACC_Tour.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -15,6 +15,12 @@ namespace Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogCategory> BlogCategories { get; set; }
+
+        public DbSet<DescriptionImage> DescriptionImages { get; set; }
+        public DbSet<TourGuide> TourGuides { get; set; }
+        public DbSet<TourAssignment> TourAssignments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,10 +32,10 @@ namespace Data
                 .HasPrecision(18, 2);  // 18 chữ số tổng cộng, 2 chữ số sau dấu phẩy
 
             builder.Entity<Booking>()
-                .Property(b => b.TotalAmount)
+                .Property(b => b.TotalPrice)
                 .HasPrecision(18, 2);  // 18 chữ số tổng cộng, 2 chữ số sau dấu phẩy
 
-            // Cấu hình các relationship và ràng buộc
+            // Cấu hình các relationship và ràng buộc cho Booking
             builder.Entity<Booking>()
                 .HasOne(b => b.User)
                 .WithMany(u => u.Bookings)
@@ -42,6 +48,7 @@ namespace Data
                 .HasForeignKey(b => b.TourId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Cấu hình các relationship và ràng buộc cho Review
             builder.Entity<Review>()
                 .HasOne(r => r.User)
                 .WithMany(u => u.Reviews)
@@ -54,10 +61,37 @@ namespace Data
                 .HasForeignKey(r => r.TourId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Cấu hình relationship cho Message
             builder.Entity<Message>()
                 .HasOne(m => m.User)
                 .WithMany(u => u.Messages)
                 .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Cấu hình mối quan hệ nhiều-nhiều giữa Blog và BlogCategory
+            builder.Entity<Blog>()
+                .HasMany(b => b.Categories)
+                .WithMany(c => c.Blogs);
+
+            builder.Entity<Tour>()
+                .HasMany(t => t.DescriptionImages)
+                .WithOne(di => di.Tour)
+                .HasForeignKey(di => di.TourId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // Cấu hình cho TourAssignment
+            builder.Entity<TourAssignment>()
+                .HasOne(ta => ta.Tour)
+                .WithMany()
+                .HasForeignKey(ta => ta.TourId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TourAssignment>()
+                .HasOne(ta => ta.TourGuide)
+                .WithMany(tg => tg.TourAssignments)
+                .HasForeignKey(ta => ta.TourGuideId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
