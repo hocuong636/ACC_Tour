@@ -42,16 +42,17 @@
             @foreach (var tour in Model)
             {
                 <div class="col-lg-4 col-md-6">
-                    <div class="package-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="@tour.ImageUrl" alt="">
+                    <div class="package-item h-100 d-flex flex-column">
+                        <div class="overflow-hidden" style="height: 250px;">
+                            <img class="img-fluid w-100 h-100" src="@tour.ImageUrl" alt="" style="object-fit: cover;">
                         </div>
                         <div class="d-flex border-bottom">
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@tour.StartDate.ToString("dd/MM/yyyy")</small>
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>@((tour.EndDate - tour.StartDate).Days) ngày</small>
                             <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>@tour.MaxParticipants người</small>
                         </div>
-                        <div class="text-center p-4">
+                        <div class="text-center p-4 flex-grow-1 d-flex flex-column">
+                            <h4 class="mb-2">@tour.Name</h4>
                             <h3 class="mb-0">@tour.Price.ToString("N0") VNĐ</h3>
                             <div class="mb-3">
                                 <small class="fa fa-star text-primary"></small>
@@ -60,8 +61,8 @@
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
                             </div>
-                            <p>@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
-                            <div class="d-flex justify-content-center mb-2">
+                            <p class="mb-3 flex-grow-1" style="height: 4.5em; overflow: hidden;">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+                            <div class="d-flex justify-content-center mb-2 mt-auto">
                                 <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Chi tiết</a>
                                 <a asp-controller="Booking" asp-action="Create" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
                             </div>
