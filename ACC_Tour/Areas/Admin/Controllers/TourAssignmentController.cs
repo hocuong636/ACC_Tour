@@ -126,6 +126,18 @@ namespace ACC_Tour.Areas.Admin.Controllers
         {
             try
             {
+                // Xóa validation cho Tour và TourGuide
+                ModelState.Remove("Tour");
+                ModelState.Remove("TourGuide");
+
+                // Kiểm tra nếu TourId hoặc TourGuideId là 0
+                if (assignment.TourId == 0 || assignment.TourGuideId == 0)
+                {
+                    ViewBag.Tours = await _context.Tours.Where(t => t.IsActive).ToListAsync();
+                    ViewBag.TourGuides = await _context.TourGuides.ToListAsync();
+                    return View(assignment);
+                }
+
                 // Lấy thông tin tour để kiểm tra ngày
                 var tour = await _context.Tours.FindAsync(assignment.TourId);
                 if (tour == null)
@@ -136,14 +148,22 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     return View(assignment);
                 }
 
-                // Gán ngày từ tour vào assignment
-                assignment.StartDate = tour.StartDate;
-                assignment.EndDate = tour.EndDate;
+                // Gán ngày từ tour vào assignment nếu chưa được set
+                if (assignment.StartDate == default)
+                {
+                    assignment.StartDate = tour.StartDate;
+                }
+                
+                if (assignment.EndDate == default)
+                {
+                    assignment.EndDate = tour.EndDate;
+                }
 
                 // Kiểm tra xem hướng dẫn viên có lịch trùng không
                 var hasConflict = await _context.TourAssignments
                     .AnyAsync(a => a.TourGuideId == assignment.TourGuideId &&
                                  a.Status != AssignmentStatus.Cancelled &&
+                                 a.Id != assignment.Id && // Thêm điều kiện này để tránh xung đột với chính nó
                                  ((a.StartDate <= assignment.StartDate && a.EndDate >= assignment.StartDate) ||
                                   (a.StartDate <= assignment.EndDate && a.EndDate >= assignment.EndDate) ||
                                   (a.StartDate >= assignment.StartDate && a.EndDate <= assignment.EndDate)));

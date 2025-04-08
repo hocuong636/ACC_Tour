@@ -1,0 +1,81 @@
+@model ACC_Tour.Models.TourAssignment
+
+@{
+    ViewData["Title"] = "Xóa phân công tour";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Xác nhận xóa</h6>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Bạn có chắc chắn muốn xóa phân công tour này?
+            </div>
+
+            <dl class="row">
+                <dt class="col-sm-2">Tour</dt>
+                <dd class="col-sm-10">@Model.Tour.Name</dd>
+
+                <dt class="col-sm-2">Hướng dẫn viên</dt>
+                <dd class="col-sm-10">@Model.TourGuide.Name</dd>
+
+                <dt class="col-sm-2">Ngày bắt đầu</dt>
+                <dd class="col-sm-10">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-2">Ngày kết thúc</dt>
+                <dd class="col-sm-10">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-2">Trạng thái</dt>
+                <dd class="col-sm-10">
+                    @switch (Model.Status)
+                    {
+                        case AssignmentStatus.Pending:
+                            <span class="badge badge-warning">Chờ xác nhận</span>
+                            break;
+                        case AssignmentStatus.Confirmed:
+                            <span class="badge badge-info">Đã xác nhận</span>
+                            break;
+                        case AssignmentStatus.Completed:
+                            <span class="badge badge-success">Đã hoàn thành</span>
+                            break;
+                        case AssignmentStatus.Cancelled:
+                            <span class="badge badge-danger">Đã hủy</span>
+                            break;
+                    }
+                </dd>
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <dt class="col-sm-2">Ghi chú</dt>
+                    <dd class="col-sm-10">@Model.Notes</dd>
+                }
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Xóa
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </form>
+        </div>
+    </div>
+</div> 

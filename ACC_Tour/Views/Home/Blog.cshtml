@@ -29,10 +29,10 @@
             @foreach (var blog in Model)
             {
                 <div class="col-lg-4 col-md-6">
-                    <div class="blog-item">
+                    <div class="blog-item h-100 d-flex flex-column">
                         <div class="blog-img">
                             <div class="blog-img-inner">
-                                <img class="img-fluid w-100 rounded-top" src="@(string.IsNullOrEmpty(blog.ImageUrl) ? "/img/blog-1.jpg" : blog.ImageUrl)" alt="@blog.Title">
+                                <img class="img-fluid w-100 rounded-top" src="@(string.IsNullOrEmpty(blog.ImageUrl) ? "/img/blog-1.jpg" : blog.ImageUrl)" alt="@blog.Title" style="height: 250px; object-fit: cover;">
                                 <div class="blog-icon">
                                     <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
                                 </div>
@@ -43,11 +43,11 @@
                                 <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>0</a>
                             </div>
                         </div>
-                        <div class="blog-content border border-top-0 rounded-bottom p-4">
+                        <div class="blog-content border border-top-0 rounded-bottom p-4 flex-grow-1 d-flex flex-column">
                             <p class="mb-3">Đăng bởi: @(string.IsNullOrEmpty(blog.Author) ? "Admin" : blog.Author)</p>
                             <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="h4 text-decoration-none">@blog.Title</a>
-                            <p class="my-3">@(string.IsNullOrEmpty(blog.ShortDescription) ? blog.Content.Substring(0, Math.Min(100, blog.Content.Length)) + "..." : blog.ShortDescription)</p>
-                            <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="btn btn-primary rounded-pill py-2 px-4">Đọc thêm</a>
+                            <p class="my-3 flex-grow-1">@(string.IsNullOrEmpty(blog.ShortDescription) ? blog.Content.Substring(0, Math.Min(100, blog.Content.Length)) + "..." : blog.ShortDescription)</p>
+                            <a asp-action="BlogDetail" asp-route-slug="@blog.Slug" class="btn btn-primary rounded-pill py-2 px-4 mt-auto">Đọc thêm</a>
                         </div>
                     </div>
                 </div>
@@ -72,4 +72,53 @@
         </div>
     </div>
 </div>
-<!-- Subscribe End --> 
+<!-- Subscribe End -->
+
+<style>
+    .blog-item {
+        transition: all 0.3s;
+        height: 100%;
+    }
+    
+    .blog-img-inner {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .blog-img-inner img {
+        transition: all 0.5s;
+    }
+    
+    .blog-item:hover .blog-img-inner img {
+        transform: scale(1.1);
+    }
+    
+    .blog-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: all 0.3s;
+    }
+    
+    .blog-item:hover .blog-icon {
+        opacity: 1;
+    }
+    
+    .blog-content {
+        height: 100%;
+    }
+    
+    .blog-content p {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+</style> 

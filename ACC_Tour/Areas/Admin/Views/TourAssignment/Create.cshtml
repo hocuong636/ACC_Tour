@@ -39,16 +39,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-3">
-                            <label asp-for="TourId" class="control-label">Tour <span class="text-danger">*</span></label>
-                            <select asp-for="TourId" class="form-control" asp-items="@(new SelectList(ViewBag.Tours, "Id", "Name"))" required>
+                            <label asp-for="TourId" class="control-label">Tour</label>
+                            <select asp-for="TourId" class="form-control" asp-items="@(new SelectList(ViewBag.Tours, "Id", "Name"))">
                                 <option value="">-- Chọn tour --</option>
                             </select>
                             <span asp-validation-for="TourId" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label asp-for="TourGuideId" class="control-label">Hướng dẫn viên <span class="text-danger">*</span></label>
-                            <select asp-for="TourGuideId" class="form-control" required>
+                            <label asp-for="TourGuideId" class="control-label">Hướng dẫn viên</label>
+                            <select asp-for="TourGuideId" class="form-control">
                                 <option value="">-- Chọn hướng dẫn viên --</option>
                             </select>
                             <span asp-validation-for="TourGuideId" class="text-danger"></span>
@@ -58,14 +58,16 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label asp-for="StartDate" class="control-label">Ngày bắt đầu</label>
-                            <input asp-for="StartDate" class="form-control" type="date" readonly />
+                            <input asp-for="StartDate" class="form-control" type="date" />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
+                            <small class="form-text text-muted">Ngày bắt đầu sẽ được tự động điền khi chọn tour</small>
                         </div>
 
                         <div class="form-group mb-3">
                             <label asp-for="EndDate" class="control-label">Ngày kết thúc</label>
-                            <input asp-for="EndDate" class="form-control" type="date" readonly />
+                            <input asp-for="EndDate" class="form-control" type="date" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
+                            <small class="form-text text-muted">Ngày kết thúc sẽ được tự động điền khi chọn tour</small>
                         </div>
 
                         <div class="form-group mb-3">
@@ -97,23 +99,11 @@
             // Thêm validation cho form
             $("#createForm").validate({
                 rules: {
-                    TourId: {
-                        required: true
-                    },
-                    TourGuideId: {
-                        required: true
-                    },
                     Notes: {
                         maxlength: 500
                     }
                 },
                 messages: {
-                    TourId: {
-                        required: "Vui lòng chọn tour"
-                    },
-                    TourGuideId: {
-                        required: "Vui lòng chọn hướng dẫn viên"
-                    },
                     Notes: {
                         maxlength: "Ghi chú không được vượt quá 500 ký tự"
                     }

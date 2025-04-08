@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Sửa Tour";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_AdminLayout";
 }
 
 <div class="container-fluid">
@@ -25,7 +25,7 @@
 
                 <div class="mb-3">
                     <label asp-for="Description" class="form-label">Mô tả</label>
-                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <textarea asp-for="Description" id="editor" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
@@ -97,6 +97,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/decoupled-document/ckeditor.js"></script>
     <script>
         $(document).ready(function () {
             // Lấy và format giá trị ban đầu từ Model
@@ -145,5 +146,60 @@
                 return true;
             });
         });
+
+        // Initialize CKEditor
+        DecoupledEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: [
+                    'heading',
+                    '|',
+                    'fontSize',
+                    'fontFamily',
+                    '|',
+                    'fontColor',
+                    'fontBackgroundColor',
+                    '|',
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strikethrough',
+                    '|',
+                    'alignment',
+                    '|',
+                    'numberedList',
+                    'bulletedList',
+                    '|',
+                    'outdent',
+                    'indent',
+                    '|',
+                    'link',
+                    'blockQuote',
+                    'insertTable',
+                    'mediaEmbed',
+                    '|',
+                    'undo',
+                    'redo'
+                ],
+                language: 'vi',
+                htmlSupport: {
+                    allow: [
+                        {
+                            name: /.*/,
+                            attributes: true,
+                            classes: true,
+                            styles: true
+                        }
+                    ]
+                }
+            })
+            .then(editor => {
+                const toolbarContainer = document.querySelector('#toolbar-container');
+                toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
-} 
+}
+
+<div id="toolbar-container" class="border-bottom mb-3"></div> 
