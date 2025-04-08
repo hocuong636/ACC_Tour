@@ -42,18 +42,22 @@
             @foreach (var tour in Model)
             {
                 <div class="col-lg-4 col-md-6">
+
                     <div class="package-item h-100 d-flex flex-column">
                         <div class="overflow-hidden" style="height: 250px;">
                             <img class="img-fluid w-100 h-100" src="@tour.ImageUrl" alt="" style="object-fit: cover;">
+
                         </div>
                         <div class="d-flex border-bottom">
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@tour.StartDate.ToString("dd/MM/yyyy")</small>
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>@((tour.EndDate - tour.StartDate).Days) ngày</small>
                             <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>@tour.MaxParticipants người</small>
                         </div>
+
                         <div class="text-center p-4 flex-grow-1 d-flex flex-column">
                             <h4 class="mb-2">@tour.Name</h4>
                             <h3 class="mb-0">@tour.Price.ToString("N0") VNĐ</h3>
+
                             <div class="mb-3">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
