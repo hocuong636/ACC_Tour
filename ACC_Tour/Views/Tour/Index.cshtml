@@ -44,7 +44,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="package-item">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="@tour.ImageUrl" alt="">
+                            <img class="img-fluid" src="@tour.ImageUrl" alt="" style="height:275px; width:450px">
                         </div>
                         <div class="d-flex border-bottom">
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@tour.StartDate.ToString("dd/MM/yyyy")</small>
@@ -52,7 +52,8 @@
                             <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>@tour.MaxParticipants người</small>
                         </div>
                         <div class="text-center p-4">
-                            <h3 class="mb-0">@tour.Price.ToString("N0") VNĐ</h3>
+							<h3 class="mb-0">@tour.Name</h3>
+                            <h5 class="mb-0">@tour.Price.ToString("N0") VNĐ</h5>
                             <div class="mb-3">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
