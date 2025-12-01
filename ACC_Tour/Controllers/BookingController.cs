@@ -43,7 +43,22 @@ namespace ACC_Tour.Controllers
 
             if (tour == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Tour không tồn tại hoặc không khả dụng.";
+                return RedirectToAction("Index", "Tour");
+            }
+
+            // Kiểm tra tour đã qua ngày khởi hành chưa
+            if (tour.StartDate.Date <= DateTime.Now.Date)
+            {
+                TempData["ErrorMessage"] = "Không thể đặt tour đã bắt đầu hoặc đã qua ngày khởi hành.";
+                return RedirectToAction("Index", "Tour");
+            }
+
+            // Kiểm tra còn slot không
+            if (tour.RemainingSlots <= 0)
+            {
+                TempData["ErrorMessage"] = "Tour này đã hết chỗ.";
+                return RedirectToAction("Index", "Tour");
             }
 
             var booking = new Booking
@@ -66,10 +81,33 @@ namespace ACC_Tour.Controllers
                 return NotFound();
             }
 
-            // Kiểm tra số lượng người tham gia
+            // Kiểm tra tour có đang active không
+            if (!tour.IsActive)
+            {
+                TempData["ErrorMessage"] = "Tour này hiện không khả dụng để đặt.";
+                return RedirectToAction("Index", "Tour");
+            }
+
+            // Kiểm tra tour đã qua ngày khởi hành chưa
+            if (tour.StartDate.Date <= DateTime.Now.Date)
+            {
+                TempData["ErrorMessage"] = "Không thể đặt tour đã bắt đầu hoặc đã qua ngày khởi hành.";
+                return RedirectToAction("Index", "Tour");
+            }
+
+            // Kiểm tra số người tối thiểu
+            if (numberOfParticipants < tour.MinParticipants)
+            {
+                TempData["ErrorMessage"] = $"Số người tham gia tối thiểu là {tour.MinParticipants} người.";
+                return RedirectToAction("Create", new { id = tourId });
+            }
+
+            // Kiểm tra số lượng người tham gia (tối đa)
             if (numberOfParticipants <= 0 || numberOfParticipants > tour.RemainingSlots)
             {
-                ModelState.AddModelError("NumberOfParticipants", "Số người tham gia không hợp lệ");
+                TempData["ErrorMessage"] = numberOfParticipants > tour.RemainingSlots 
+                    ? $"Số người tham gia vượt quá số slot còn lại ({tour.RemainingSlots} người)."
+                    : "Số người tham gia phải lớn hơn 0.";
                 return RedirectToAction("Create", new { id = tourId });
             }
 
@@ -95,7 +133,8 @@ namespace ACC_Tour.Controllers
             };
             // Cập nhật số lượng slot còn lại của tour
             tour.RemainingSlots -= numberOfParticipants;
-            tour.IsActive = tour.RemainingSlots > 0; // Nếu còn slot thì tour vẫn hoạt động, ngược lại thì không
+            // Tour chỉ active khi còn slot VÀ chưa qua ngày khởi hành
+            tour.IsActive = tour.RemainingSlots > 0 && tour.StartDate.Date > DateTime.Now.Date;
             _context.Update(tour);
 
             _context.Add(booking);
@@ -181,6 +220,7 @@ namespace ACC_Tour.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var booking = await _context.Bookings
+                .Include(b => b.Tour)
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
             if (booking == null)
@@ -194,7 +234,21 @@ namespace ACC_Tour.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Cập nhật RemainingSlots khi hủy booking
+            var tour = booking.Tour;
+            if (tour != null)
+            {
+                tour.RemainingSlots += booking.NumberOfParticipants;
+                // Nếu tour đang không active và có slot trống, kích hoạt lại tour
+                if (!tour.IsActive && tour.RemainingSlots > 0)
+                {
+                    tour.IsActive = true;
+                }
+                _context.Update(tour);
+            }
+
             booking.Status = BookingStatus.Cancelled;
+            booking.PaymentStatus = "Đã hủy";
             _context.Update(booking);
             await _context.SaveChangesAsync();
 

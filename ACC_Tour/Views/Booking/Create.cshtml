@@ -60,9 +60,12 @@
 
                             <div class="mb-4">
                                 <label asp-for="NumberOfParticipants" class="form-label">Số người tham gia</label>
-                                <input asp-for="NumberOfParticipants" class="form-control" min="1" max="@Model.Tour.RemainingSlots" required />
+                                <input asp-for="NumberOfParticipants" class="form-control" min="@Model.Tour.MinParticipants" max="@Model.Tour.RemainingSlots" required />
                                 <span asp-validation-for="NumberOfParticipants" class="text-danger"></span>
-                                <small class="text-muted">Tối đa @Model.Tour.RemainingSlots người</small>
+                                <small class="text-muted">
+                                    Tối thiểu: @Model.Tour.MinParticipants người | 
+                                    Tối đa: @Model.Tour.RemainingSlots người
+                                </small>
                             </div>
 
                             <div class="mb-4">
@@ -99,6 +102,51 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
+                <!-- Thông tin thanh toán -->
+                <div class="card shadow-sm mb-4" id="paymentInfoCard" style="display: none;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-credit-card me-2 text-primary"></i>Thông tin thanh toán
+                        </h5>
+                        <hr />
+                        
+                        <!-- Chuyển khoản ngân hàng -->
+                        <div id="bankTransferInfo" style="display: none;">
+                            <h6><i class="fas fa-university me-2"></i>Chuyển khoản ngân hàng:</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <p class="mb-1"><strong>Ngân hàng:</strong> Vietcombank</p>
+                                <p class="mb-1"><strong>Số tài khoản:</strong> 1234567890</p>
+                                <p class="mb-1"><strong>Chủ tài khoản:</strong> CÔNG TY DU LỊCH ACC</p>
+                                <p class="mb-0"><strong>Nội dung:</strong> @User.Identity.Name - @Model.Tour.Name</p>
+                            </div>
+                        </div>
+
+                        <!-- Ví Momo -->
+                        <div id="momoInfo" style="display: none;">
+                            <h6><i class="fas fa-wallet me-2"></i>Ví điện tử Momo:</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <p class="mb-1"><strong>Số điện thoại:</strong> 0123456789</p>
+                                <p class="mb-0"><strong>Nội dung:</strong> @User.Identity.Name - @Model.Tour.Name</p>
+                            </div>
+                        </div>
+
+                        <!-- Tiền mặt -->
+                        <div id="cashInfo" style="display: none;">
+                            <h6><i class="fas fa-money-bill-wave me-2"></i>Thanh toán tiền mặt:</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <p class="mb-1">Thanh toán trực tiếp tại văn phòng:</p>
+                                <p class="mb-1"><strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</p>
+                                <p class="mb-0"><strong>Giờ làm việc:</strong> 8:00 - 17:00 (Thứ 2 - Thứ 7)</p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Đơn đặt tour sẽ được xác nhận sau khi nhận được thanh toán.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Điều khoản và điều kiện -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
@@ -152,14 +200,16 @@
             // Kiểm tra giới hạn số người tham gia
             function validateParticipants() {
                 var people = parseInt($('#NumberOfParticipants').val());
+                var min = parseInt(@Model.Tour.MinParticipants);
                 var max = parseInt(@Model.Tour.RemainingSlots);
                 
                 if (people > max) {
                     alert('Số người tham gia không được vượt quá ' + max + ' người');
                     $('#NumberOfParticipants').val(max);
                     updateTotalPrice();
-                } else if (people < 1) {
-                    $('#NumberOfParticipants').val(1);
+                } else if (people < min) {
+                    alert('Số người tham gia tối thiểu là ' + min + ' người');
+                    $('#NumberOfParticipants').val(min);
                     updateTotalPrice();
                 }
             }
@@ -170,6 +220,37 @@
             // Cập nhật lần đầu khi tải trang
             updateTotalPrice();
 
+            // Hiển thị thông tin thanh toán theo phương thức được chọn
+            function updatePaymentInfo() {
+                var paymentMethod = $('#PaymentMethod').val();
+                
+                // Ẩn tất cả thông tin thanh toán
+                $('#bankTransferInfo, #momoInfo, #cashInfo').hide();
+                
+                if (paymentMethod) {
+                    $('#paymentInfoCard').slideDown();
+                    
+                    switch(paymentMethod) {
+                        case 'BankTransfer':
+                            $('#bankTransferInfo').fadeIn();
+                            break;
+                        case 'Momo':
+                            $('#momoInfo').fadeIn();
+                            break;
+                        case 'Cash':
+                            $('#cashInfo').fadeIn();
+                            break;
+                    }
+                } else {
+                    $('#paymentInfoCard').slideUp();
+                }
+            }
+
+            $('#PaymentMethod').on('change', updatePaymentInfo);
+            
+            // Kiểm tra nếu đã có phương thức thanh toán được chọn
+            updatePaymentInfo();
+
             // Xử lý submit form
             $('form').on('submit', function(e) {
                 if (!$('#PaymentMethod').val()) {
@@ -178,9 +259,19 @@
                     return false;
                 }
 
-                if (!$('#NumberOfParticipants').val() || parseInt($('#NumberOfParticipants').val()) < 1) {
+                var people = parseInt($('#NumberOfParticipants').val());
+                var min = parseInt(@Model.Tour.MinParticipants);
+                var max = parseInt(@Model.Tour.RemainingSlots);
+                
+                if (!people || people < min) {
                     e.preventDefault();
-                    alert('Vui lòng nhập số người tham gia hợp lệ');
+                    alert('Số người tham gia tối thiểu là ' + min + ' người');
+                    return false;
+                }
+                
+                if (people > max) {
+                    e.preventDefault();
+                    alert('Số người tham gia không được vượt quá ' + max + ' người');
                     return false;
                 }
 

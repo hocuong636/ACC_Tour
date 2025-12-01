@@ -77,20 +77,39 @@ namespace ACC_Tour.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, BookingStatus newStatus)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings
+                .Include(b => b.Tour)
+                .FirstOrDefaultAsync(b => b.Id == id);
             
             if (booking == null)
             {
                 return NotFound();
             }
-            
+
+            var oldStatus = booking.Status;
             booking.Status = newStatus;
-            if (newStatus == (BookingStatus)2)
+            
+            // Nếu chuyển sang trạng thái Cancelled, cập nhật RemainingSlots
+            if (newStatus == BookingStatus.Cancelled && 
+                (oldStatus == BookingStatus.Pending || oldStatus == BookingStatus.Confirmed))
             {
                 booking.PaymentStatus = "Đã hủy";
+                
+                // Cập nhật RemainingSlots khi hủy booking
+                var tour = booking.Tour;
+                if (tour != null)
+                {
+                    tour.RemainingSlots += booking.NumberOfParticipants;
+                    // Nếu tour đang không active và có slot trống, kích hoạt lại tour
+                    if (!tour.IsActive && tour.RemainingSlots > 0)
+                    {
+                        tour.IsActive = true;
+                    }
+                    _context.Update(tour);
+                }
             }
-            _context.Update(booking);
             
+            _context.Update(booking);
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "Cập nhật trạng thái thành công!";
             return RedirectToAction(nameof(Index));

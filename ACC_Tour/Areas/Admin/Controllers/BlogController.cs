@@ -24,22 +24,20 @@ namespace ACC_Tour.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var blogs = await _context.Blogs
-                .Include(b => b.Categories)
                 .OrderByDescending(b => b.CreatedAt)
+                .AsNoTracking()
                 .ToListAsync();
             return View(blogs);
         }
 
         public async Task<IActionResult> Create()
         {
-            var categories = await _context.BlogCategories.ToListAsync();
-            ViewBag.Categories = new MultiSelectList(categories, "Id", "Name");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Blog blog, List<int> categoryIds, IFormFile imageFile)
+        public async Task<IActionResult> Create(Blog blog, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
@@ -65,28 +63,18 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 // Xử lý nội dung từ editor
                 blog.Content = await ProcessEditorContent(blog.Content);
 
-                if (categoryIds != null && categoryIds.Any())
-                {
-                    blog.Categories = await _context.BlogCategories
-                        .Where(c => categoryIds.Contains(c.Id))
-                        .ToListAsync();
-                }
-
                 _context.Blogs.Add(blog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            var categories = await _context.BlogCategories.ToListAsync();
-            ViewBag.Categories = new MultiSelectList(categories, "Id", "Name");
             return View(blog);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var blog = await _context.Blogs
-                .Include(b => b.Categories)
-                .Include(b => b.Attachments)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog == null)
@@ -94,16 +82,26 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var categories = await _context.BlogCategories.ToListAsync();
-            var selectedCategoryIds = blog.Categories?.Select(c => c.Id).ToList() ?? new List<int>();
-            ViewBag.Categories = new MultiSelectList(categories, "Id", "Name", selectedCategoryIds);
+            return View(blog);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var blog = await _context.Blogs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (blog == null)
+            {
+                return NotFound();
+            }
             
             return View(blog);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Blog blog, List<int> categoryIds, IFormFile imageFile)
+        public async Task<IActionResult> Edit(int id, Blog blog, IFormFile imageFile)
         {
             if (id != blog.Id)
             {
@@ -115,8 +113,6 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 try
                 {
                     var existingBlog = await _context.Blogs
-                        .Include(b => b.Categories)
-                        .Include(b => b.Attachments)
                         .FirstOrDefaultAsync(b => b.Id == id);
 
                     if (existingBlog == null)
@@ -140,7 +136,7 @@ namespace ACC_Tour.Areas.Admin.Controllers
                         // Xóa file cũ nếu có
                         if (!string.IsNullOrEmpty(existingBlog.ImageUrl))
                         {
-                            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", 
+                            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
                                 existingBlog.ImageUrl.TrimStart('/'));
                             if (System.IO.File.Exists(oldPath))
                             {
@@ -162,17 +158,6 @@ namespace ACC_Tour.Areas.Admin.Controllers
                     existingBlog.Author = blog.Author;
                     existingBlog.Slug = blog.Slug;
 
-                    if (categoryIds != null && categoryIds.Any())
-                    {
-                        existingBlog.Categories = await _context.BlogCategories
-                            .Where(c => categoryIds.Contains(c.Id))
-                            .ToListAsync();
-                    }
-                    else
-                    {
-                        existingBlog.Categories.Clear();
-                    }
-
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -189,8 +174,6 @@ namespace ACC_Tour.Areas.Admin.Controllers
                 }
             }
 
-            var categories = await _context.BlogCategories.ToListAsync();
-            ViewBag.Categories = new MultiSelectList(categories, "Id", "Name", categoryIds);
             return View(blog);
         }
 

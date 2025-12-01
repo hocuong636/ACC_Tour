@@ -45,16 +45,6 @@
 
                     <div class="col-md-4">
                         <div class="form-group mb-3">
-                            <label asp-for="Categories" class="control-label">Danh mục</label>
-                            <select name="categoryIds" class="form-select" multiple>
-                                @foreach (var item in (MultiSelectList)ViewBag.Categories)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="form-group mb-3">
                             <label asp-for="Author" class="control-label">Tác giả</label>
                             <input asp-for="Author" class="form-control" />
                             <span asp-validation-for="Author" class="text-danger"></span>
@@ -65,11 +55,11 @@
                             <input type="file" name="imageFile" class="form-control" accept="image/*" />
                         </div>
 
-                        <div class="form-group mb-3">
+                        @* <div class="form-group mb-3">
                             <label asp-for="Slug" class="control-label">Slug</label>
                             <input asp-for="Slug" class="form-control" />
                             <span asp-validation-for="Slug" class="text-danger"></span>
-                        </div>
+                        </div> *@
 
                         <div class="form-check mb-3">
                             <input asp-for="IsPublished" class="form-check-input" />

@@ -17,6 +17,7 @@ namespace ACC_Tour.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
+        public DbSet<BlogAttachment> BlogAttachments { get; set; }
 
         public DbSet<DescriptionImage> DescriptionImages { get; set; }
         public DbSet<TourGuide> TourGuides { get; set; }
@@ -72,6 +73,13 @@ namespace ACC_Tour.Data
             builder.Entity<Blog>()
                 .HasMany(b => b.Categories)
                 .WithMany(c => c.Blogs);
+
+            // Cấu hình relationship cho BlogAttachment
+            builder.Entity<BlogAttachment>()
+                .HasOne(ba => ba.Blog)
+                .WithMany(b => b.Attachments)
+                .HasForeignKey(ba => ba.BlogId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Tour>()
                 .HasMany(t => t.DescriptionImages)

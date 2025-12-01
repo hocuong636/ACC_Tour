@@ -125,22 +125,38 @@ namespace ACC_Tour.Controllers
         public async Task<IActionResult> CancelBooking(int id)
         {
             var booking = await _context.Bookings
+                .Include(b => b.Tour)
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == User.Identity.Name);
 
             if (booking == null)
             {
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Không tìm thấy đơn đặt tour." });
             }
 
             if (booking.Status != BookingStatus.Pending)
             {
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Chỉ có thể hủy đặt tour khi trạng thái là đang chờ xử lý." });
+            }
+
+            // Cập nhật RemainingSlots khi hủy booking
+            var tour = booking.Tour;
+            if (tour != null)
+            {
+                tour.RemainingSlots += booking.NumberOfParticipants;
+                // Nếu tour đang không active và có slot trống, kích hoạt lại tour
+                if (!tour.IsActive && tour.RemainingSlots > 0)
+                {
+                    tour.IsActive = true;
+                }
+                _context.Update(tour);
             }
 
             booking.Status = BookingStatus.Cancelled;
+            booking.PaymentStatus = "Đã hủy";
+            _context.Update(booking);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true });
+            return Json(new { success = true, message = "Hủy đặt tour thành công!" });
         }
     }
 }

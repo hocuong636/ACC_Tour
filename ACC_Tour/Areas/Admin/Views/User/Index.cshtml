@@ -30,7 +30,7 @@
                         <th>Họ tên</th>
                         <th>Số điện thoại</th>
                         <th>Vai trò</th>
-                        <th>Trạng thái</th>
+                        @* <th>Trạng thái</th> *@
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -47,7 +47,7 @@
                                     <span class="badge bg-primary me-1">@role</span>
                                 }
                             </td>
-                            <td>
+                            @* <td>
                                 @if (user.EmailConfirmed)
                                 {
                                     <span class="badge bg-success">Đã xác thực</span>
@@ -56,7 +56,7 @@
                                 {
                                     <span class="badge bg-warning">Chưa xác thực</span>
                                 }
-                            </td>
+                            </td> *@
                             <td>
                                 <div class="btn-group" role="group">
                                     <a href="@Url.Action("Details", "User", new { area = "Admin", id = user.Id })" 

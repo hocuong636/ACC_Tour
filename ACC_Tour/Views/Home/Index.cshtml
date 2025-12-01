@@ -121,14 +121,35 @@
         <div class="row g-4">
             @foreach (var tour in Model)
             {
+                var isPastStartDate = tour.StartDate.Date <= DateTime.Now.Date;
+                var isPastEndDate = tour.EndDate.Date < DateTime.Now.Date;
+                
                 <div class="col-lg-4 col-md-6">
-                    <div class="tour-item h-100 d-flex flex-column">
-                        <div class="tour-img overflow-hidden" style="height: 250px;">
+                    <div class="tour-item h-100 d-flex flex-column @(isPastStartDate ? "opacity-75" : "")">
+                        <div class="tour-img overflow-hidden position-relative" style="height: 250px;">
                             <img src="@tour.ImageUrl" class="img-fluid w-100 h-100" alt="" style="object-fit: cover;">
+                            @if (isPastEndDate)
+                            {
+                                <div class="position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-danger">Tour đã kết thúc</span>
+                                </div>
+                            }
+                            else if (isPastStartDate)
+                            {
+                                <div class="position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-warning text-dark">Tour đã khởi hành</span>
+                                </div>
+                            }
                         </div>
                         <div class="tour-content p-4 flex-grow-1 d-flex flex-column">
                             <h5 class="mb-2">@tour.Name</h5>
                             <p class="mb-3 flex-grow-1" style="height: 4.5em; overflow: hidden;">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+                            @if (isPastStartDate)
+                            {
+                                <div class="alert alert-warning mb-2 py-2">
+                                    <small><i class="fas fa-exclamation-triangle me-1"></i>Tour này đã @(isPastEndDate ? "kết thúc" : "khởi hành")</small>
+                                </div>
+                            }
                             <div class="d-flex justify-content-between mt-auto">
                                 <span class="text-primary">@tour.Price.ToString("N0") VNĐ</span>
                                 <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-primary rounded-pill py-2 px-4">Chi tiết</a>
