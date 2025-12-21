@@ -1,108 +1,269 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<ACC_Tour.Models.Tour>
+﻿@model IEnumerable<ACC_Tour.Models.Tour>
 @{
     ViewData["Title"] = "Danh sách Tour";
 }
 
-<!-- Page Header Start -->
-<div class="container-fluid page-header mb-5 py-5">
-    <div class="container">
-        <h1 class="display-3 text-blue mb-3 animated slideInDown">Tour du lịch</h1>
-        <nav aria-label="breadcrumb animated slideInDown">
-            <ol class="breadcrumb text-uppercase">
-                <li class="breadcrumb-item"><a class="text-black" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                <li class="breadcrumb-item text-black active" aria-current="page">Tour du lịch</li>
+@section Styles {
+    <style>
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            padding: 3rem 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+        }
+
+        .breadcrumb-item a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            color: white;
+        }
+
+        .breadcrumb-item.active {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .search-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .tour-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .tour-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            background: #E2E8F0;
+        }
+
+        .tour-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .tour-card:hover .tour-image img {
+            transform: scale(1.1);
+        }
+
+        .badge-custom {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .tour-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tour-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #64748B;
+            flex-wrap: wrap;
+        }
+
+        .tour-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tour-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .price { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+
+        .btn-explore {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-explore:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        @@media (max-width: 768px) {
+            .page-hero {
+                padding: 2rem 0;
+            }
+
+            h1 {
+                font-size: 2rem !important;
+            }
+        }
+    </style>
+}
+
+<!-- Page Header -->
+<div class="page-hero">
+    <div class="container position-relative">
+        <h1 class="mb-3" style="font-size: 2.5rem; font-weight: 800;">Khám Phá Tours</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                <li class="breadcrumb-item active">Tours Du Lịch</li>
             </ol>
         </nav>
     </div>
 </div>
-<!-- Page Header End -->
-<!-- Search Bar Start -->
-<div class="container-fluid search-bar position-relative" style="top: -50%; transform: translateY(-50%);">
-    <div class="container">
-        <div class="position-relative rounded-pill w-100 mx-auto p-5" style="background: rgba(19, 53, 123, 0.4);">
-            <form asp-controller="Tour" asp-action="Index" method="get">
-                <input name="searchString" class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Tìm kiếm tour...">
-                <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 position-absolute me-2" style="top: 50%; right: 46px; transform: translateY(-50%);">Tìm kiếm</button>
-            </form>
-        </div>
+
+<!-- Search Section -->
+<div class="container mt-5 mb-5">
+    <div class="search-wrapper">
+        <form asp-controller="Tour" asp-action="Index" method="get" class="d-flex gap-2">
+            <input type="text" name="searchString" class="form-control rounded-lg" 
+                   placeholder="Tìm kiếm tour, địa điểm..." value="@ViewData["searchString"]"
+                   style="border: 1px solid #E2E8F0; padding: 0.75rem 1rem;">
+            <button type="submit" class="btn btn-primary rounded-lg px-4" style="white-space: nowrap;">
+                <i class="bi bi-search me-2"></i>Tìm Kiếm
+            </button>
+        </form>
     </div>
-</div>
-<!-- Search Bar End -->
-<!-- Package Start -->
-<div class="container-fluid tour py-5">
-    <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h5 class="section-title px-3">Tour du lịch</h5>
-            <h1 class="mb-0">Các tour du lịch hấp dẫn</h1>
-        </div>
-        <div class="row g-4">
-            @foreach (var tour in Model)
-            {
-                var isPastStartDate = tour.StartDate.Date <= DateTime.Now.Date;
-                var isPastEndDate = tour.EndDate.Date < DateTime.Now.Date;
-                
-                <div class="col-lg-4 col-md-6">
-                    <div class="package-item h-100 d-flex flex-column @(isPastStartDate ? "opacity-75" : "")">
-                        <div class="overflow-hidden position-relative" style="height: 250px;">
-                            <img class="img-fluid w-100 h-100" src="@tour.ImageUrl" alt="" style="object-fit: cover;">
-                            @if (isPastEndDate)
-                            {
-                                <div class="position-absolute top-0 start-0 m-2">
-                                    <span class="badge bg-danger">Tour đã kết thúc</span>
-                                </div>
-                            }
-                            else if (isPastStartDate)
-                            {
-                                <div class="position-absolute top-0 start-0 m-2">
-                                    <span class="badge bg-warning text-dark">Tour đã khởi hành</span>
-                                </div>
-                            }
-                        </div>
-                        <div class="d-flex border-bottom">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@tour.StartDate.ToString("dd/MM/yyyy")</small>
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>@((tour.EndDate - tour.StartDate).Days) ngày</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>@tour.MaxParticipants người</small>
-                        </div>
 
-                        <div class="text-center p-4 flex-grow-1 d-flex flex-column">
-                            <h4 class="mb-2">@tour.Name</h4>
-                            <h3 class="mb-0">@tour.Price.ToString("N0") VNĐ</h3>
-
-                            <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
+    <!-- Tours Grid -->
+    <div class="row g-4">
+        @foreach (var tour in Model)
+        {
+            var isPastStartDate = tour.StartDate.Date <= DateTime.Now.Date;
+            var isPastEndDate = tour.EndDate.Date < DateTime.Now.Date;
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="tour-card @(isPastStartDate ? "opacity-75" : "")">
+                    <div class="tour-image">
+                        <img src="@tour.ImageUrl" alt="@tour.Name">
+                        @if (isPastEndDate)
+                        {
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge-custom bg-danger text-white">
+                                    <i class="bi bi-x-circle"></i>Đã Kết Thúc
+                                </span>
                             </div>
-                            <p class="mb-3 flex-grow-1" style="height: 4.5em; overflow: hidden;">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
-                            
+                        }
+                        else if (isPastStartDate)
+                        {
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge-custom bg-warning text-dark">
+                                    <i class="bi bi-play-circle"></i>Đã Khởi Hành
+                                </span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="tour-info">
+                        <h5 class="mb-3">@tour.Name</h5>
+                        
+                        <div class="tour-meta">
+                            <span><i class="bi bi-calendar"></i>@tour.StartDate.ToString("dd/MM/yyyy")</span>
+                            <span><i class="bi bi-clock"></i>@((tour.EndDate - tour.StartDate).Days) ngày</span>
+                            <span><i class="bi bi-people"></i>@tour.MaxParticipants khách</span>
+                        </div>
+
+                        <p class="text-secondary mb-3">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+
+                        @if (isPastStartDate)
+                        {
+                            <div class="alert alert-warning mb-3 py-2 d-flex align-items-center gap-2 small">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <span>Tour này đã @(isPastEndDate ? "kết thúc" : "khởi hành")</span>
+                            </div>
+                        }
+
+                        <div class="tour-footer">
+                            <span class="price">@tour.Price.ToString("N0")</span>
                             @if (isPastStartDate)
                             {
-                                <div class="alert alert-warning mb-2 py-2">
-                                    <small><i class="fas fa-exclamation-triangle me-1"></i>Tour này đã @(isPastEndDate ? "kết thúc" : "khởi hành")</small>
+                                <button class="btn btn-secondary btn-sm rounded-pill" disabled>
+                                    Đã @(isPastEndDate ? "Kết Thúc" : "Khởi Hành")
+                                </button>
+                            }
+                            else
+                            {
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-action="Details" asp-route-id="@tour.Id" class="btn btn-explore">
+                                        <i class="bi bi-eye"></i>Chi Tiết
+                                    </a>
+                                    <a asp-controller="Booking" asp-action="Create" asp-route-id="@tour.Id" class="btn btn-explore">
+                                        <i class="bi bi-check"></i>Đặt Ngay
+                                    </a>
                                 </div>
                             }
-                            
-                            <div class="d-flex justify-content-center mb-2 mt-auto">
-                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Chi tiết</a>
-                                @if (isPastStartDate)
-                                {
-                                    <button class="btn btn-sm btn-secondary px-3" style="border-radius: 0 30px 30px 0;" disabled>Đã @(isPastEndDate ? "kết thúc" : "khởi hành")</button>
-                                }
-                                else
-                                {
-                                    <a asp-controller="Booking" asp-action="Create" asp-route-id="@tour.Id" class="btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
-                                }
-                            </div>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #CBD5E1;"></i>
+            <p class="mt-3 text-secondary">Không tìm thấy tour phù hợp với tìm kiếm của bạn.</p>
+        </div>
+    }
 </div>
-<!-- Package End -->

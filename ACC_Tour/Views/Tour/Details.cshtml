@@ -1,4 +1,5 @@
 ﻿@using Microsoft.EntityFrameworkCore
+@using System.Security.Claims
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -23,6 +24,48 @@
     </div>
 </div>
 <!-- Page Header End -->
+
+<!-- Alert Messages -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show m-4" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong>Lỗi!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (ViewBag.ShowError == true && ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show m-4" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong>Lỗi!</strong> @ViewBag.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show m-4" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <strong>Thành công!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show m-4" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        @TempData["InfoMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (ViewBag.ShowInfo == true && ViewBag.InfoMessage != null)
+{
+    <div class="alert alert-info alert-dismissible fade show m-4" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        @ViewBag.InfoMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <!-- Tour Detail Start -->
 <div class="container-fluid booking py-5">
@@ -115,7 +158,7 @@
                             <h4 class="card-title mb-0">Đánh giá từ khách hàng</h4>
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <a asp-controller="Feedback" asp-action="Create" asp-route-tourId="@Model.Id" class="btn btn-primary btn-sm">
+                                <a asp-controller="Review" asp-action="Create" asp-route-tourId="@Model.Id" class="btn btn-primary btn-sm">
                                     <i class="fas fa-star me-2"></i>Viết đánh giá
                                 </a>
                             }
@@ -127,9 +170,114 @@
                             }
                         </div>
                         
+                        <!-- Load approved reviews -->
+                        @{
+                            var approvedReviews = Model.Reviews?
+                                .Where(r => r.IsApproved)
+                                .OrderByDescending(r => r.ReviewDate)
+                                .ToList() ?? new List<Review>();
+                        }
+
+                        @if (approvedReviews.Any())
+                        {
+                            <div class="reviews-list">
+                                @foreach (var review in approvedReviews)
+                                {
+                                    <div class="review-item card mb-3 border-light">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div class="flex-grow-1">
+                                                    <div class="mb-2">
+                                                        @for (int i = 0; i < review.Rating; i++)
+                                                        {
+                                                            <span class="text-warning">⭐</span>
+                                                        }
+                                                        @for (int i = review.Rating; i < 5; i++)
+                                                        {
+                                                            <span class="text-secondary">☆</span>
+                                                        }
+                                                        <span class="ms-2 text-muted small">@review.Rating/5</span>
+                                                    </div>
+                                                    <h6 class="card-subtitle mb-1 text-dark">
+                                                        <strong>@review.User.FullName</strong>
+                                                    </h6>
+                                                    <p class="text-muted small mb-2">
+                                                        <i class="far fa-calendar me-1"></i>
+                                                        @review.ReviewDate.ToString("dd/MM/yyyy HH:mm")
+                                                    </p>
+                                                </div>
+                                                @if (User.Identity.IsAuthenticated && review.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+                                                {
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-secondary" type="button" id="reviewMenu_@review.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fas fa-ellipsis-v"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="reviewMenu_@review.Id">
+                                                            <li>
+                                                                <a class="dropdown-item" asp-controller="Review" asp-action="Edit" asp-route-id="@review.Id">
+                                                                    <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteReviewModal_@review.Id">
+                                                                    <i class="fas fa-trash me-2"></i>Xóa
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <p class="card-text">@review.Comment</p>
+                                            
+                                            @if (!string.IsNullOrEmpty(review.AdminResponse))
+                                            {
+                                                <div class="alert alert-light border-start border-primary mt-3 ps-3">
+                                                    <strong class="text-primary">Phản hồi từ :</strong>
+                                                    <p class="mb-0 mt-2">@review.AdminResponse</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Chưa có đánh giá nào cho tour này.
+                            </div>
+                        }
 
                     </div>
                 </div>
+
+                <!-- Delete Review Modals -->
+                @foreach (var review in approvedReviews)
+                {
+                    @if (User.Identity.IsAuthenticated && review.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+                    {
+                        <div class="modal fade" id="deleteReviewModal_@review.Id" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Xóa Đánh Giá</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Bạn có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <form method="post" asp-controller="Review" asp-action="Delete" asp-route-id="@review.Id" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Xóa</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
 
             <!-- Booking Form -->

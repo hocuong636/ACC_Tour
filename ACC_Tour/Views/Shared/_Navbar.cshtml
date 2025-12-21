@@ -1,78 +1,95 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @using Microsoft.AspNetCore.Identity
 @using ACC_Tour.Models
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="container-fluid position-relative p-0">
-    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
-        <a asp-controller="Home" asp-action="Index" class="navbar-brand p-0">
-            <h1 class="m-0"><i class="fa fa-map-marker-alt me-3"></i>ACC Tour</h1>
+<div class="container-fluid position-relative p-0" style="background: white;">
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0 shadow-sm" style="box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <a asp-controller="Home" asp-action="Index" class="navbar-brand p-0 d-flex align-items-center gap-2">
+            <div class="d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 12px;">
+                <i class="fas fa-map-location-dot text-white" style="font-size: 24px;"></i>
+            </div>
+            <div class="d-flex flex-column">
+                <span class="fw-bold" style="font-size: 18px; color: #0F172A;">ACC Tour</span>
+                <small class="text-secondary" style="font-size: 12px; letter-spacing: 0.5px;">Your Travel Companion</small>
+            </div>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="fa fa-bars"></span>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-label="Toggle navigation" style="box-shadow: none;">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse" style="font-size:x-large">
-            <div class="navbar-nav ms-auto py-0">
-                <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Trang chủ</a>
-                <a asp-controller="Home" asp-action="About" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">Giới thiệu</a>
-                <a asp-controller="Tour" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Tour" ? "active" : "")">Tours</a>
-
-                <a asp-controller="Home" asp-action="Blog" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Blog" ? "active" : "")">Blogs</a>
-
-                <a asp-controller="Home" asp-action="Booking" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Booking" ? "active" : "")">Đặt Tour</a>
-                
-
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0 fw-semibold gap-1">
+                     <a asp-controller="Home" asp-action="Index"
+                         class="nav-item nav-link px-3 py-2 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                    <i class="bi bi-house-fill me-2"></i>Trang chủ
+                </a>
+                     <a asp-controller="Home" asp-action="About"
+                         class="nav-item nav-link px-3 py-2 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "About" ? "active" : "")">
+                    <i class="bi bi-info-circle-fill me-2"></i>Giới thiệu
+                </a>
+                     <a asp-controller="Tour" asp-action="Index"
+                         class="nav-item nav-link px-3 py-2 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tour" ? "active" : "")">
+                    <i class="bi bi-compass-fill me-2"></i>Tours
+                </a>
+                     <a asp-controller="Home" asp-action="Blog"
+                         class="nav-item nav-link px-3 py-2 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Blog" ? "active" : "")">
+                    <i class="bi bi-chat-fill me-2"></i>Blogs
+                </a>
+                     <a asp-controller="Home" asp-action="Booking"
+                         class="nav-item nav-link px-3 py-2 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Booking" ? "active" : "")">
+                    <i class="bi bi-calendar-check-fill me-2"></i>Đặt Tour
+                </a>
             </div>
         </div>
     </nav>
 </div>
 
 <style>
-    .navbar {
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        background-color: #fff;
-    }
-    
-    .navbar-light .navbar-nav .nav-link {
-        color: #555;
+    .nav-link {
+        font-size: 15px;
         font-weight: 500;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s;
+        letter-spacing: 0.3px;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--text-primary) !important;
     }
-    
-    .navbar-light .navbar-nav .nav-link:hover,
-    .navbar-light .navbar-nav .nav-link.active {
-        color: #FF7F50;
-    }
-    
-    .navbar-brand h1 {
-        color: #FF7F50;
-        font-weight: 700;
-    }
-    
-    .auth-buttons {
-        display: flex;
-        margin-left: 1rem;
-    }
-    
-    .dropdown-menu {
-        border: none;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        border-radius: 0.5rem;
-    }
-    
-    .dropdown-item {
-        padding: 0.5rem 1.5rem;
-        transition: all 0.2s;
-    }
-    
-    .dropdown-item:hover {
-        background-color: #f8f9fa;
-        color: #FF7F50;
-    }
-    
 
+    .nav-link::before {
+        display: none !important;
+        content: none !important;
+    }
+
+    .nav-link:hover {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--text-primary) !important;
+    }
+
+    .nav-link:hover::before {
+        display: none !important;
+        width: 0 !important;
+    }
+
+    /* Active state: blue text only */
+    .nav-link.active {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--primary) !important;
+    }
+
+    .nav-link.active::before {
+        display: none !important;
+        width: 0 !important;
+    }
+
+    @@media (max-width: 991.98px) {
+        .nav-link {
+            padding: 0.5rem 0.75rem !important;
+            margin-bottom: 0.25rem;
+        }
+    }
 </style>

@@ -9,35 +9,44 @@
 @{
 }
 
-<div class="container-fluid bg-primary px-5 d-none d-lg-block">
-    <div class="row gx-0">
-        <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
-            <div class="d-inline-flex align-items-center" style="height: 45px;">
-                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-twitter fw-normal"></i></a>
-                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
-                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
-                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-instagram fw-normal"></i></a>
-                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle" href=""><i class="fab fa-youtube fw-normal"></i></a>
+<div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 px-4 px-lg-5 py-2 d-none d-lg-block" style="background: linear-gradient(135deg, #004E89 0%, #1a3a52 100%);">
+    <div class="row gx-0 align-items-center">
+        <div class="col-lg-8">
+            <div class="d-inline-flex align-items-center gap-2" style="height: 40px;">
+                <a class="btn btn-sm btn-light-hover rounded-circle p-2" href="#" title="Twitter" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); color: white; transition: all 0.3s;">
+                    <i class="fab fa-twitter fs-6"></i>
+                </a>
+                <a class="btn btn-sm btn-light-hover rounded-circle p-2" href="#" title="Facebook" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); color: white; transition: all 0.3s;">
+                    <i class="fab fa-facebook-f fs-6"></i>
+                </a>
+                <a class="btn btn-sm btn-light-hover rounded-circle p-2" href="#" title="Instagram" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); color: white; transition: all 0.3s;">
+                    <i class="fab fa-instagram fs-6"></i>
+                </a>
+                <a class="btn btn-sm btn-light-hover rounded-circle p-2" href="#" title="YouTube" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); color: white; transition: all 0.3s;">
+                    <i class="fab fa-youtube fs-6"></i>
+                </a>
             </div>
         </div>
-        <div class="col-lg-4 text-center text-lg-end">
-            <div class="d-inline-flex align-items-center" style="height: 45px;">
+        <div class="col-lg-4 text-lg-end">
+            <div class="d-inline-flex align-items-center gap-3" style="height: 40px;">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle text-light" data-bs-toggle="dropdown">
-                            <small><i class="fa fa-user me-2"></i>@User.Identity.Name</small>
-                        </a>
-                        <div class="dropdown-menu rounded">
-                            <a asp-controller="Account" asp-action="Profile" class="dropdown-item">
-                                <i class="fas fa-user-alt me-2"></i>Thông tin cá nhân
+                        <button class="btn btn-sm btn-light-text dropdown-toggle d-flex align-items-center gap-2" style="background: none; border: none; color: white; padding: 0;" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span class="d-none d-sm-inline">@User.Identity.Name</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end rounded-lg shadow-lg" style="border: none; margin-top: 0.5rem;">
+                            <a asp-controller="Account" asp-action="Profile" class="dropdown-item d-flex align-items-center gap-2">
+                                <i class="bi bi-person"></i> Thông tin cá nhân
                             </a>
-                            <a asp-controller="Booking" asp-action="Index" class="dropdown-item">
-                                <i class="fas fa-history me-2"></i>Lịch sử đặt tour
+                            <a asp-controller="Booking" asp-action="Index" class="dropdown-item d-flex align-items-center gap-2">
+                                <i class="bi bi-calendar-check"></i> Lịch sử đặt tour
                             </a>
-                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                                <button type="submit" class="dropdown-item">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                            <hr class="dropdown-divider my-1">
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-right"></i> Đăng xuất
                                 </button>
                             </form>
                         </div>
@@ -45,11 +54,11 @@
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Register" class="me-3 text-light">
-                        <small><i class="fa fa-user me-2"></i>Đăng ký</small>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-light-text" style="background: none; border: none; color: white; padding: 0;">
+                        <i class="bi bi-person-plus me-1"></i><span class="d-none d-sm-inline">Đăng ký</span>
                     </a>
-                    <a asp-controller="Account" asp-action="Login" class="me-3 text-light">
-                        <small><i class="fa fa-sign-in-alt me-2"></i>Đăng nhập</small>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm" style="background: rgba(29,78,216,0.85); border: 1px solid var(--primary); color: white; border-radius: 20px; padding: 6px 16px;">
+                        <i class="bi bi-box-arrow-in-right me-1"></i><span class="d-none d-sm-inline">Đăng nhập</span>
                     </a>
                 }
             </div>
@@ -59,22 +68,43 @@
 
 <style>
     .dropdown-menu {
-        margin-top: 0.5rem;
-        border: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        padding: 0.5rem 0;
+        animation: slideDown 0.2s ease-out;
     }
 
     .dropdown-item {
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0;
+        font-size: 0.95rem;
     }
 
-    .dropdown-item:hover {
-        background-color: var(--bs-primary);
-        color: white;
+    .dropdown-item:hover { background-color: var(--primary); color: white; }
+
+    .dropdown-item:first-child {
+        border-radius: 8px 8px 0 0;
     }
 
-    .dropdown-item i {
-        width: 1.2rem;
-        text-align: center;
+    .dropdown-item:last-child {
+        border-radius: 0 0 8px 8px;
+    }
+
+    .btn-light-hover:hover {
+        background: rgba(255,107,53,0.8) !important;
+    }
+
+    .btn-light-text:hover {
+        opacity: 0.8;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>

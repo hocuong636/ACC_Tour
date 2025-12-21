@@ -1,0 +1,179 @@
+@{
+    ViewData["Title"] = "Thống Kê Đánh Giá";
+    Layout = "_AdminLayout";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-black mb-3 animated slideInDown">Thống Kê Đánh Giá</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Review" asp-action="Index">Quản Lý Đánh Giá</a></li>
+                <li class="breadcrumb-item text-black active" aria-current="page">Thống Kê Đánh Giá</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Statistics Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <!-- Main Stats -->
+        <div class="row mb-5">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tổng Đánh Giá</h5>
+                        <p class="display-4 mb-0">@ViewBag.TotalReviews</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Đã Duyệt</h5>
+                        <p class="display-4 mb-0">@ViewBag.ApprovedReviews</p>
+                        <small>(@Math.Round((double)ViewBag.ApprovedReviews / (ViewBag.TotalReviews > 0 ? ViewBag.TotalReviews : 1) * 100, 1)%)</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Chờ Duyệt</h5>
+                        <p class="display-4 mb-0">@ViewBag.PendingReviews</p>
+                        <small>(@Math.Round((double)ViewBag.PendingReviews / (ViewBag.TotalReviews > 0 ? ViewBag.TotalReviews : 1) * 100, 1)%)</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Điểm Trung Bình</h5>
+                        <p class="display-4 mb-0">@ViewBag.AverageRating</p>
+                        <div class="rating">
+                            @for (int i = 0; i < (int)ViewBag.AverageRating; i++)
+                            {
+                                <span class="text-warning">⭐</span>
+                            }
+                            @for (int i = (int)ViewBag.AverageRating; i < 5; i++)
+                            {
+                                <span class="text-secondary">☆</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Distribution Chart -->
+        <div class="row mb-5">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Phân Bố Đánh Giá Theo Sao</h5>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var ratingDistribution = ViewBag.RatingDistribution as IEnumerable<dynamic> ?? new List<dynamic>();
+                            int maxCount = 1;
+                            foreach (var item in ratingDistribution)
+                            {
+                                if (item.Count > maxCount)
+                                    maxCount = item.Count;
+                            }
+                        }
+                        @for (int rating = 5; rating >= 1; rating--)
+                        {
+                            var ratingData = ratingDistribution.FirstOrDefault((System.Func<dynamic, bool>)(x => x.Rating == rating));
+                            var count = ratingData?.Count ?? 0;
+                            var percentage = ViewBag.TotalReviews > 0 ? (double)count / ViewBag.TotalReviews * 100 : 0;
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span>
+                                        @for (int i = 0; i < rating; i++)
+                                        {
+                                            <span class="text-warning">⭐</span>
+                                        }
+                                        @for (int i = rating; i < 5; i++)
+                                        {
+                                            <span class="text-secondary">☆</span>
+                                        }
+                                    </span>
+                                    <span class="text-muted">@count đánh giá (@Math.Round(percentage, 1)%)</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: @(Math.Round(percentage))%"></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Hành Động Nhanh</h5>
+                    </div>
+                    <div class="card-body d-grid gap-2">
+                        <a asp-action="Index" class="btn btn-primary btn-lg">
+                            <i class="fas fa-list me-2"></i>Xem Tất Cả Đánh Giá
+                        </a>
+                        <a asp-action="Index" asp-route-approvedFilter="false" class="btn btn-warning btn-lg">
+                            <i class="fas fa-hourglass-half me-2"></i>Đánh Giá Chờ Duyệt
+                        </a>
+                        <a asp-action="Index" asp-route-approvedFilter="true" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle me-2"></i>Đánh Giá Đã Duyệt
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Card -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Thông Tin Thống Kê</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="mb-2">Tỉ Lệ Duyệt</h6>
+                        <p class="h5 mb-0">
+                            <strong>@Math.Round((double)ViewBag.ApprovedReviews / (ViewBag.TotalReviews > 0 ? ViewBag.TotalReviews : 1) * 100, 1)%</strong>
+                        </p>
+                        <small class="text-muted">Trong tất cả đánh giá</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-2">Đánh Giá Trung Bình</h6>
+                        <p class="h5 mb-0">
+                            <strong>@ViewBag.AverageRating/5.0</strong>
+                        </p>
+                        <small class="text-muted">Dựa trên đánh giá đã duyệt</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-2">Tỉ Lệ Chờ Duyệt</h6>
+                        <p class="h5 mb-0">
+                            <strong>@Math.Round((double)ViewBag.PendingReviews / (ViewBag.TotalReviews > 0 ? ViewBag.TotalReviews : 1) * 100, 1)%</strong>
+                        </p>
+                        <small class="text-muted">Cần xem xét</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Statistics End -->
+
+<style>
+    .progress {
+        height: 25px;
+    }
+    
+    .progress-bar {
+        background: linear-gradient(90deg, #ffc107, #ff9800);
+    }
+</style>

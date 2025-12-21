@@ -1,0 +1,97 @@
+@using ACC_Tour.Models
+@model Review
+
+@{
+    ViewData["Title"] = "Từ Chối Đánh Giá";
+    Layout = "_AdminLayout";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-black mb-3 animated slideInDown">Từ Chối Đánh Giá</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Review" asp-action="Index">Quản Lý Đánh Giá</a></li>
+                <li class="breadcrumb-item text-black active" aria-current="page">Từ Chối Đánh Giá</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Reject Review Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <div class="alert alert-warning mb-4">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Bạn sắp từ chối đánh giá này</strong>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2"><strong>Thông tin đánh giá:</strong></h6>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p class="mb-2">
+                                        <strong>Người dùng:</strong> @Model.User.FullName
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Tour:</strong> @Model.Tour.Name
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Đánh giá:</strong>
+                                        @for (int i = 0; i < Model.Rating; i++)
+                                        {
+                                            <span class="text-warning">⭐</span>
+                                        }
+                                        @for (int i = Model.Rating; i < 5; i++)
+                                        {
+                                            <span class="text-secondary">☆</span>
+                                        }
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Bình luận:</strong><br/>
+                                        <em>@Model.Comment</em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="post" asp-action="Reject" asp-route-id="@Model.Id">
+                            <div class="mb-4">
+                                <label for="reason" class="form-label">
+                                    <strong>Lý Do Từ Chối <span class="text-danger">*</span></strong>
+                                </label>
+                                <textarea name="reason" 
+                                    id="reason" 
+                                    class="form-control" 
+                                    rows="5" 
+                                    placeholder="Nhập lý do từ chối (sẽ được gửi tới người dùng)..."
+                                    required></textarea>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Lý do này sẽ được hiển thị khi người dùng xem đánh giá của mình.
+                                </small>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex gap-2">
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-check me-2"></i>Xác Nhận Từ Chối
+                                </button>
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times me-2"></i>Hủy
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Reject Review End -->

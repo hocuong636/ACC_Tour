@@ -1,0 +1,102 @@
+@using ACC_Tour.Models
+@model Review
+
+@{
+    ViewData["Title"] = "Thêm Phản Hồi";
+    Layout = "_AdminLayout";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-black mb-3 animated slideInDown">Thêm Phản Hồi</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-black" asp-area="Admin" asp-controller="Review" asp-action="Index">Quản Lý Đánh Giá</a></li>
+                <li class="breadcrumb-item text-black active" aria-current="page">Thêm Phản Hồi</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Add Response Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <div class="mb-4">
+                            <h6 class="mb-2"><strong>Thông tin đánh giá:</strong></h6>
+                            <div class="card bg-light mb-4">
+                                <div class="card-body">
+                                    <p class="mb-2">
+                                        <strong>Người dùng:</strong> @Model.User.FullName
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Tour:</strong> @Model.Tour.Name
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Đánh giá:</strong>
+                                        @for (int i = 0; i < Model.Rating; i++)
+                                        {
+                                            <span class="text-warning">⭐</span>
+                                        }
+                                        @for (int i = Model.Rating; i < 5; i++)
+                                        {
+                                            <span class="text-secondary">☆</span>
+                                        }
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Bình luận:</strong><br/>
+                                        <em>@Model.Comment</em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.AdminResponse))
+                        {
+                            <div class="alert alert-info mb-4">
+                                <strong>Phản hồi hiện tại:</strong>
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                    @Model.AdminResponse
+                                </div>
+                            </div>
+                        }
+
+                        <form method="post" asp-action="AddResponse" asp-route-id="@Model.Id">
+                            <div class="mb-4">
+                                <label for="adminResponse" class="form-label">
+                                    <strong>Phản Hồi <span class="text-danger">*</span></strong>
+                                </label>
+                                <textarea name="adminResponse" 
+                                    id="adminResponse" 
+                                    class="form-control" 
+                                    rows="6" 
+                                    placeholder="Nhập phản hồi (sẽ được hiển thị công khai khi người dùng xem đánh giá)..."
+                                    required>@Model.AdminResponse</textarea>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Phản hồi này sẽ được hiển thị công khai cho tất cả người dùng.
+                                </small>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save me-2"></i>Lưu Phản Hồi
+                                </button>
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times me-2"></i>Hủy
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Response End -->

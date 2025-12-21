@@ -1,0 +1,109 @@
+@using Microsoft.EntityFrameworkCore
+@inject ACC_Tour.Data.ApplicationDbContext _context
+@{
+    ViewData["Title"] = "Chỉnh Sửa Đánh Giá";
+}
+@model Review
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 py-5">
+    <div class="container">
+        <h1 class="display-3 text-black mb-3 animated slideInDown">Chỉnh Sửa Đánh Giá</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase">
+                <li class="breadcrumb-item"><a class="text-black" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-black" asp-controller="Tour" asp-action="Index">Tour du lịch</a></li>
+                <li class="breadcrumb-item text-black active" aria-current="page">Chỉnh Sửa Đánh Giá</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Review Form Start -->
+<div class="container-fluid booking py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-5">
+                        @{
+                            var tour = _context.Tours.Find(Model.TourId);
+                        }
+
+                        @if (tour != null)
+                        {
+                            <div class="mb-4">
+                                <h5 class="card-title">Tour: <strong>@tour.Name</strong></h5>
+                                <p class="text-muted mb-0">Giá: @tour.Price.ToString("N0") VNĐ/người</p>
+                            </div>
+                        }
+
+                        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="needs-validation">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="TourId" />
+                            <input type="hidden" asp-for="UserId" />
+                            
+                            <div class="mb-4">
+                                <label for="rating" class="form-label">
+                                    <i class="fas fa-star text-warning me-2"></i>
+                                    <strong>Đánh Giá (1-5 sao)</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="rating-input">
+                                    <select asp-for="Rating" class="form-select form-select-lg" required>
+                                        <option value="1">⭐ 1 sao - Không tốt</option>
+                                        <option value="2">⭐⭐ 2 sao - Tạm chấp nhận</option>
+                                        <option value="3">⭐⭐⭐ 3 sao - Bình thường</option>
+                                        <option value="4">⭐⭐⭐⭐ 4 sao - Tốt</option>
+                                        <option value="5">⭐⭐⭐⭐⭐ 5 sao - Rất tốt</option>
+                                    </select>
+                                    <span asp-validation-for="Rating" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="comment" class="form-label">
+                                    <i class="fas fa-comment text-primary me-2"></i>
+                                    <strong>Nhận Xét Chi Tiết</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <textarea asp-for="Comment" 
+                                    class="form-control form-control-lg" 
+                                    rows="6" 
+                                    placeholder="Chia sẻ trải nghiệm của bạn về tour này..."
+                                    required
+                                    minlength="10"></textarea>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Vui lòng nhập ít nhất 10 ký tự
+                                </small>
+                                <span asp-validation-for="Comment" class="text-danger small"></span>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-check me-2"></i>Lưu Thay Đổi
+                                </button>
+                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@Model.TourId" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times me-2"></i>Hủy
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Review Form End -->
+
+<style>
+    .rating-input select {
+        cursor: pointer;
+    }
+
+    .rating-input select option {
+        padding: 10px;
+    }
+</style>

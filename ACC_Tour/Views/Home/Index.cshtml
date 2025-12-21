@@ -4,120 +4,302 @@
 
 @{
     ViewData["Title"] = "Trang chủ";
-
 }
 
-<!-- Carousel Start -->
-<div class="carousel-header">
-    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
-            <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
-            <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-                <img src="~/img/carousel-2.jpg" class="img-fluid" alt="Image">
-                <div class="carousel-caption">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">Khám phá thế giới</h4>
-                        <h1 class="display-2 text-capitalize text-white mb-4">Cùng nhau khám phá thế giới!</h1>
-                        <p class="mb-5 fs-5">Hãy để chúng tôi dẫn dắt bạn đến những điểm đến tuyệt vời nhất trên thế giới.</p>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a asp-controller="Tour" asp-action="Index" class="btn-hover-bg btn btn-primary rounded-pill text-white py-3 px-5">Khám phá ngay</a>
-                        </div>
-                    </div>
+@section Styles {
+    <style>
+        .hero-section {
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-30%, 30%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: slideInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-btn {
+            animation: slideInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .search-container {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 10;
+        }
+
+        .search-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-form input {
+            flex: 1;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            background: #F8FAFC;
+        }
+
+        .search-form input:focus {
+            outline: none;
+            background: #E2E8F0;
+            box-shadow: inset 0 0 0 3px var(--primary);
+        }
+
+        .search-form button {
+            padding: 0.75rem 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-form button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.25);
+        }
+
+        .tour-item {
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .tour-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .tour-img {
+            position: relative;
+            overflow: hidden;
+            background: #E2E8F0;
+        }
+
+        .tour-img img {
+            transition: transform 0.5s ease;
+        }
+
+        .tour-item:hover .tour-img img {
+            transform: scale(1.1);
+        }
+
+        .about-section {
+            background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+        }
+
+        .about-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: rotate(-2deg);
+        }
+
+        @@keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form button {
+                width: 100%;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1>Khám Phá Thế Giới Cùng ACC Tour</h1>
+                <p>Hành trình du lịch tuyệt vời đang chờ bạn. Từ những bãi biển xinh đẹp đến những thành phố sôi động, hãy để chúng tôi dẫn bạn qua những trải nghiệm không thể quên.</p>
+                <div class="hero-btn">
+                    <a asp-controller="Tour" asp-action="Index" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">
+                        <i class="bi bi-arrow-right me-2"></i>Khám Phá Tours
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="position-relative">
+                    <div style="width: 100%; height: 500px; background: rgba(255,255,255,0.1); border-radius: 20px; backdrop-filter: blur(10px);"></div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Carousel End -->
 
-<!-- Search Bar Start -->
-<div class="container-fluid search-bar position-relative" style="top: -50%; transform: translateY(-50%);">
-    <div class="container">
-        <div class="position-relative rounded-pill w-100 mx-auto p-5" style="background: rgba(19, 53, 123, 0.8);">
-            <form asp-controller="Tour" asp-action="Index" method="get">
-                <input name="searchString" class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Tìm kiếm tour...">
-                <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 position-absolute me-2" style="top: 50%; right: 46px; transform: translateY(-50%);">Tìm kiếm</button>
+        <!-- Search Bar -->
+        <div class="search-container">
+            <form asp-controller="Tour" asp-action="Index" method="get" class="search-form">
+                <input type="text" name="searchString" placeholder="Tìm kiếm tour, địa điểm..." class="form-control-custom">
+                <button type="submit">
+                    <i class="bi bi-search me-2"></i>Tìm Kiếm
+                </button>
             </form>
         </div>
     </div>
 </div>
-<!-- Search Bar End -->
 
-<!-- About Start -->
-<div class="container-fluid about py-5">
+<!-- Spacer for Search Bar -->
+<div style="height: 120px;"></div>
+
+<!-- About Section -->
+<div class="about-section py-5">
     <div class="container py-5">
-        <div class="row g-5 align-items-center">
+        <div class="row align-items-center g-5">
             <div class="col-lg-5">
-                <div class="h-100" style="border: 30px solid; border-color: transparent #13357B transparent #13357B;">
-                    <img src="~/img/about.jpg" class="img-fluid w-100 h-100" alt="">
+                <div class="about-image">
+                    <img src="~/img/about.jpg" class="img-fluid w-100" alt="Về ACC Tour">
                 </div>
             </div>
-            <div class="col-lg-7" style="background: linear-gradient(rgba(255, 255, 255, .8), rgba(255, 255, 255, .8)), url(~/img/about-img-1.png);">
-                <h5 class="section-about-title pe-3">Về chúng tôi</h5>
-                <h1 class="mb-4">Chào mừng đến với <span class="text-primary">ACC Tour</span></h1>
-                <p class="mb-4">ACC Tour là đơn vị du lịch hàng đầu với hơn 10 năm kinh nghiệm trong lĩnh vực tổ chức tour du lịch trong và ngoài nước.</p>
-                <p class="mb-4">Chúng tôi tự hào mang đến cho quý khách những trải nghiệm du lịch tuyệt vời nhất với chất lượng dịch vụ cao cấp.</p>
-                <div class="row gy-2 gx-4 mb-4">
+            <div class="col-lg-7">
+                <div class="mb-3">
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2" style="background: #DBEAFE !important; color: var(--primary) !important;">Về Chúng Tôi</span>
+                </div>
+                <h2 class="mb-4" style="font-size: 3rem; font-weight: 800;">Chào Mừng Đến ACC Tour</h2>
+                <p class="mb-4 text-secondary fs-5">ACC Tour là đơn vị du lịch hàng đầu với hơn 10 năm kinh nghiệm trong lĩnh vực tổ chức tour du lịch trong và ngoài nước. Chúng tôi cam kết mang lại những trải nghiệm du lịch tuyệt vời nhất.</p>
+
+                <div class="row g-3 mb-4">
                     <div class="col-sm-6">
-                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Vé máy bay hạng nhất</p>
+                        <div class="d-flex gap-3">
+                            <div style="width: 50px; height: 50px; background: #DBEAFE; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-airplane-fill" style="color: var(--primary); font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Vé Máy Bay</h5>
+                                <small class="text-secondary">Vé hạng nhất với giá tốt</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Khách sạn 5 sao</p>
+                        <div class="d-flex gap-3">
+                            <div style="width: 50px; height: 50px; background: #DBEAFE; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-building" style="color: var(--primary); font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Khách Sạn 5 Sao</h5>
+                                <small class="text-secondary">Chỗ ở thoải mái</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Dịch vụ 24/7</p>
+                        <div class="d-flex gap-3">
+                            <div style="width: 50px; height: 50px; background: #DBEAFE; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-telephone-fill" style="color: var(--primary); font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Hỗ Trợ 24/7</h5>
+                                <small class="text-secondary">Luôn sẵn sàng giúp</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Hướng dẫn viên chuyên nghiệp</p>
+                        <div class="d-flex gap-3">
+                            <div style="width: 50px; height: 50px; background: #DBEAFE; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-people-fill" style="color: var(--primary); font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Hướng Dẫn Viên</h5>
+                                <small class="text-secondary">Chuyên nghiệp</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <a asp-controller="Home" asp-action="About" class="btn btn-primary rounded-pill py-3 px-5 mt-2">Tìm hiểu thêm</a>
+                <a asp-controller="Home" asp-action="About" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold">
+                    Tìm Hiểu Thêm <i class="bi bi-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
 </div>
-<!-- About End -->
 
- @*<!-- Services Start -->
- <div class="container-fluid bg-light service py-5">
-     <div class="container py-5">
-         <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-             <h5 class="section-title px-3">Dịch vụ</h5>
-             <h1 class="mb-0">Dịch vụ của chúng tôi</h1>
-         </div>
-         <div class="row g-4">
-             <div class="col-lg-6">
-                 <div class="row g-4">
-                     <div class="col-12">
-                         <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 pe-0">
-                             <div class="service-content text-end">
-                                 <h5 class="mb-4">Tour trong nước</h5>
-                                 <p class="mb-0">Khám phá vẻ đẹp của Việt Nam với các tour du lịch trong nước đa dạng, phong phú.</p>
-                             </div>
-                             <div class="service-icon p-4">
-                                 <i class="fa fa-globe fa-4x text-primary"></i>
-                             </div>
-                         </div>
-                     </div>
-                     <!-- Thêm các service items khác -->
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- <!-- Services End -->*@
 
-<!-- Tour Packages Start -->
-<div class="container-fluid tour py-5">
+<!-- Tour Packages Section -->
+<div class="py-5" style="background: white;">
     <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h5 class="section-title px-3">Tour du lịch</h5>
-            <h1 class="mb-0">Tour nổi bật</h1>
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 mb-3" style="background: #DBEAFE !important; color: var(--primary) !important;">Tour Du Lịch</span>
+            <h2 class="mb-0" style="font-size: 3rem; font-weight: 800;">Tours Nổi Bật</h2>
         </div>
+
         <div class="row g-4">
             @foreach (var tour in Model)
             {
@@ -126,53 +308,149 @@
                 
                 <div class="col-lg-4 col-md-6">
                     <div class="tour-item h-100 d-flex flex-column @(isPastStartDate ? "opacity-75" : "")">
-                        <div class="tour-img overflow-hidden position-relative" style="height: 250px;">
-                            <img src="@tour.ImageUrl" class="img-fluid w-100 h-100" alt="" style="object-fit: cover;">
+                        <div class="tour-img overflow-hidden position-relative" style="height: 280px;">
+                            <img src="@tour.ImageUrl" class="img-fluid w-100 h-100" alt="@tour.Name" style="object-fit: cover;">
+                            
                             @if (isPastEndDate)
                             {
-                                <div class="position-absolute top-0 start-0 m-2">
-                                    <span class="badge bg-danger">Tour đã kết thúc</span>
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-danger px-3 py-2">
+                                        <i class="bi bi-x-circle me-1"></i>Tour Đã Kết Thúc
+                                    </span>
                                 </div>
                             }
                             else if (isPastStartDate)
                             {
-                                <div class="position-absolute top-0 start-0 m-2">
-                                    <span class="badge bg-warning text-dark">Tour đã khởi hành</span>
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+                                        <i class="bi bi-play-circle me-1"></i>Đã Khởi Hành
+                                    </span>
                                 </div>
                             }
+
+                            <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);">
+                                <h5 class="text-white mb-0">@tour.Name</h5>
+                            </div>
                         </div>
+
                         <div class="tour-content p-4 flex-grow-1 d-flex flex-column">
-                            <h5 class="mb-2">@tour.Name</h5>
-                            <p class="mb-3 flex-grow-1" style="height: 4.5em; overflow: hidden;">@tour.Description.Substring(0, Math.Min(100, tour.Description.Length))...</p>
+                            <div class="mb-3 d-flex gap-3 text-secondary small">
+                                <span><i class="bi bi-calendar me-1"></i>@tour.StartDate.ToString("dd/MM")</span>
+                                <span><i class="bi bi-clock me-1"></i>@((tour.EndDate - tour.StartDate).Days) ngày</span>
+                                <span><i class="bi bi-people me-1"></i>@tour.MaxParticipants người</span>
+                            </div>
+
+                            <p class="mb-4 flex-grow-1 text-secondary">@tour.Description.Substring(0, Math.Min(80, tour.Description.Length))...</p>
+
                             @if (isPastStartDate)
                             {
-                                <div class="alert alert-warning mb-2 py-2">
-                                    <small><i class="fas fa-exclamation-triangle me-1"></i>Tour này đã @(isPastEndDate ? "kết thúc" : "khởi hành")</small>
+                                <div class="alert alert-warning mb-3 py-2 d-flex align-items-center gap-2">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <small>Tour này đã @(isPastEndDate ? "kết thúc" : "khởi hành")</small>
                                 </div>
                             }
-                            <div class="d-flex justify-content-between mt-auto">
-                                <span class="text-primary">@tour.Price.ToString("N0") VNĐ</span>
-                                <a asp-controller="Tour" asp-action="Details" asp-route-id="@tour.Id" class="btn btn-primary rounded-pill py-2 px-4">Chi tiết</a>
+
+                            <div class="d-flex align-items-center justify-content-between mt-auto">
+                                <h4 class="mb-0" style="color: var(--primary);">@tour.Price.ToString("N0")</h4>
+                                @if (isPastStartDate)
+                                {
+                                    <button class="btn btn-secondary btn-sm rounded-pill px-4" disabled>
+                                        Đã @(isPastEndDate ? "Kết Thúc" : "Khởi Hành")
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Booking" asp-action="Create" asp-route-id="@tour.Id" class="btn btn-primary btn-sm rounded-pill px-4">
+                                        <i class="bi bi-check me-1"></i>Đặt Ngay
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             }
         </div>
-    </div>
-</div>
-<!-- Tour Packages End -->
 
-<!-- Testimonial Start -->
-<div class="container-fluid testimonial py-5">
-    <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h5 class="section-title px-3">Đánh giá</h5>
-            <h1 class="mb-0">Khách hàng nói gì về chúng tôi</h1>
-        </div>
-        <div class="text-center mt-4">
-            <a asp-controller="Feedback" asp-action="Index" class="btn btn-primary rounded-pill py-3 px-5">Xem tất cả đánh giá</a>
+        <div class="text-center mt-5">
+            <a asp-controller="Tour" asp-action="Index" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold">
+                Xem Tất Cả Tours <i class="bi bi-arrow-right ms-2"></i>
+            </a>
         </div>
     </div>
 </div>
-<!-- Testimonial End -->
+
+<!-- Testimonials Section -->
+<div class="py-5" style="background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 mb-3" style="background: #DBEAFE !important; color: var(--primary) !important;">Đánh Giá</span>
+            <h2 class="mb-0" style="font-size: 3rem; font-weight: 800;">Khách Hàng Nói Gì</h2>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="bg-white p-4 rounded-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                    </div>
+                    <p class="mb-3 text-secondary">"Một trải nghiệm tuyệt vời! Các hướng dẫn viên rất chuyên nghiệp và thân thiện. Tôi sẽ quay lại làm khách của ACC Tour."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">M</div>
+                        <div>
+                            <h6 class="mb-0">Minh Anh</h6>
+                            <small class="text-secondary">Hà Nội</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-4 rounded-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                    </div>
+                    <p class="mb-3 text-secondary">"Dịch vụ tuyệt vời từ đầu đến cuối. Mọi chi tiết đều được chăm sóc kỹ lưỡng. Giá cả hợp lý và chất lượng cao."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">T</div>
+                        <div>
+                            <h6 class="mb-0">Thanh Tùng</h6>
+                            <small class="text-secondary">TP Hồ Chí Minh</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-4 rounded-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700;"></i>
+                    </div>
+                    <p class="mb-3 text-secondary">"Tôi rất hài lòng với chuyến tour. Khách sạn sạch sẽ, đồ ăn ngon, và hướng dẫn viên giỏi. Sẽ tham gia tour khác!"</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">N</div>
+                        <div>
+                            <h6 class="mb-0">Ngân Hà</h6>
+                            <small class="text-secondary">Đà Nẵng</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a asp-controller="Home" asp-action="Blog" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold">
+                Xem Tất Cả Đánh Giá <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</div>

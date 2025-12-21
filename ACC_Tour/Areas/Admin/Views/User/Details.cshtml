@@ -27,25 +27,12 @@
 
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FullName)</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.FullName)</dd>
-
-                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
                     </dl>
                 </div>
                 <div class="col-md-6">
                     <dl class="row">
-                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EmailConfirmed)</dt>
-                        <dd class="col-sm-8">
-                            @if (Model.EmailConfirmed)
-                            {
-                                <span class="badge bg-success">Đã xác thực</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-warning">Chưa xác thực</span>
-                            }
-                        </dd>
-
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
                         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Roles)</dt>
                         <dd class="col-sm-8">
                             @foreach (var role in Model.Roles)
