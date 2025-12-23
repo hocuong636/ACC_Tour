@@ -28,6 +28,11 @@ namespace ACC_Tour.Models
         [Required]
         public bool IsPublished { get; set; } = false;
 
+        [Required]
+        public string UserId { get; set; }
+
+        public ApplicationUser User { get; set; }
+
         [StringLength(100)]
         public string? Author { get; set; }
 

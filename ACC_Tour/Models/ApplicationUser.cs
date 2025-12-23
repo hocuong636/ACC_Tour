@@ -13,6 +13,7 @@ namespace ACC_Tour.Models
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
         public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+        public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
 
         // Computed property - không lưu vào database
         public string FullName => $"{FirstName} {LastName}".Trim();

@@ -69,6 +69,12 @@ namespace ACC_Tour.Data
                 .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Blog>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Blogs)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Cấu hình mối quan hệ nhiều-nhiều giữa Blog và BlogCategory
             builder.Entity<Blog>()
                 .HasMany(b => b.Categories)

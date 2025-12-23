@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ACC_Tour.Models;
 using System.Text.RegularExpressions;
 using ACC_Tour.Data;
+using System.Security.Claims;
+using ACC_Tour.ViewModels;
 
 namespace ACC_Tour.Areas.Admin.Controllers
 {
@@ -23,9 +25,19 @@ namespace ACC_Tour.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Project only needed fields to avoid materializing large/null-sensitive columns
             var blogs = await _context.Blogs
-                .OrderByDescending(b => b.CreatedAt)
                 .AsNoTracking()
+                .OrderByDescending(b => b.CreatedAt)
+                .Select(b => new AdminBlogListItem
+                {
+                    Id = b.Id,
+                    Title = b.Title ?? string.Empty,
+                    ShortDescription = b.ShortDescription,
+                    Author = b.Author,
+                    CreatedAt = b.CreatedAt,
+                    IsPublished = b.IsPublished
+                })
                 .ToListAsync();
             return View(blogs);
         }
@@ -43,6 +55,12 @@ namespace ACC_Tour.Areas.Admin.Controllers
             {
                 blog.Slug = GenerateSlug(blog.Title);
                 blog.CreatedAt = DateTime.Now;
+                // Ensure the blog is associated with the current user
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    blog.UserId = userId;
+                }
                 
                 if (imageFile != null)
                 {
