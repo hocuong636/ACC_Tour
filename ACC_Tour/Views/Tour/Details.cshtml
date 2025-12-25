@@ -214,11 +214,6 @@
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="reviewMenu_@review.Id">
                                                             <li>
-                                                                <a class="dropdown-item" asp-controller="Review" asp-action="Edit" asp-route-id="@review.Id">
-                                                                    <i class="fas fa-edit me-2"></i>Chỉnh sửa
-                                                                </a>
-                                                            </li>
-                                                            <li>
                                                                 <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteReviewModal_@review.Id">
                                                                     <i class="fas fa-trash me-2"></i>Xóa
                                                                 </a>
@@ -269,9 +264,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                        <form method="post" asp-controller="Review" asp-action="Delete" asp-route-id="@review.Id" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger">Xóa</button>
-                                        </form>
+                                        <button type="button" class="btn btn-danger" onclick="deleteReviewAjax(@review.Id)">Xóa</button>
                                     </div>
                                 </div>
                             </div>
@@ -352,3 +345,38 @@
         </div>
     </div>
 </div>
+
+<script>
+function deleteReviewAjax(reviewId) {
+    fetch(`/Review/Delete/${reviewId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Ẩn modal
+            const modal = bootstrap.Modal.getInstance(document.querySelector(`#deleteReviewModal_${reviewId}`));
+            if (modal) {
+                modal.hide();
+            }
+            
+            // Hiển thị thông báo thành công
+            alert(data.message);
+            
+            // Redirect về trang tour
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            }
+        } else {
+            alert('Lỗi: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi:', error);
+        alert('Có lỗi xảy ra khi xóa đánh giá');
+    });
+}
+</script>
